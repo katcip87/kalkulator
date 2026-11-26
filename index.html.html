@@ -1,0 +1,3845 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kalkulator Material & Estimasi Biaya Bangunan</title>
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --primary: #14532d;
+      --primary-mid: #166534;
+      --primary-dark: #0f3f22;
+      --primary-soft: #dcfce7;
+      --accent-amber: #d97706;
+      --accent-amber-soft: #fef3c7;
+      --accent-blue: #0284c7;
+      --accent-blue-soft: #e0f2fe;
+      --accent-rose: #e11d48;
+      --accent-rose-soft: #ffe4e6;
+      --accent-purple: #7c3aed;
+      --accent-purple-soft: #ede9fe;
+      --accent-teal: #0d9488;
+      --accent-teal-soft: #ccfbf1;
+      --sub-bg: #f8fafc;
+      --price-bg: #f0fdf4;
+      --price-border: #bbf7d0;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #cbd5e1;
+      --success: #15803d;
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(180deg, #e2e8f0 0%, #f8fafc 45%, #f1f5f9 100%);
+      color: var(--text);
+      padding: 12px 12px 32px;
+      font-size: 13.5px;
+      line-height: 1.45;
+      min-height: 100vh;
+    }
+
+    .home-header {
+      background: linear-gradient(135deg, #0f3f22 0%, #14532d 55%, #1e3a8a 100%);
+      color: #ffffff;
+      padding: 18px 16px;
+      border-radius: var(--radius);
+      margin-bottom: 14px;
+      box-shadow: 0 6px 16px rgba(15, 63, 34, 0.22);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .home-header::after {
+      content: "";
+      position: absolute;
+      top: -28px;
+      right: -28px;
+      width: 110px;
+      height: 110px;
+      background: radial-gradient(circle, rgba(251, 191, 36, 0.28) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(251, 191, 36, 0.2);
+      border: 1px solid rgba(251, 191, 36, 0.55);
+      color: #fde68a;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+
+    .home-header h1 {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .home-header p {
+      font-size: 13px;
+      opacity: 0.92;
+      margin-top: 4px;
+      color: #e2e8f0;
+    }
+
+    .rekap-banner {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border: 1.5px solid #f59e0b;
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 2px 6px rgba(217, 119, 6, 0.12);
+    }
+
+    .rekap-banner.hidden {
+      display: none;
+    }
+
+    .rekap-banner-info strong {
+      display: block;
+      font-size: 13px;
+      color: #92400e;
+    }
+
+    .rekap-banner-info span {
+      font-size: 11.5px;
+      color: #b45309;
+    }
+
+    .btn-open-rekap {
+      background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 2px 6px rgba(180, 83, 9, 0.25);
+    }
+
+    .home-menu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .home-menu-grid.hidden {
+      display: none;
+    }
+
+    .menu-tile {
+      background: var(--card);
+      border: 1.5px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 16px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      cursor: pointer;
+      color: var(--text);
+      font-size: 12.5px;
+      font-weight: 700;
+      text-align: center;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+      position: relative;
+    }
+
+    .menu-tile:active {
+      transform: scale(0.97);
+    }
+
+    .tile-icon-wrap {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .menu-tile svg {
+      width: 26px;
+      height: 26px;
+      flex-shrink: 0;
+    }
+
+    .tile-badge-done {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: #16a34a;
+      color: #ffffff;
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 999px;
+      display: none;
+    }
+
+    .menu-tile.has-data .tile-badge-done {
+      display: inline-block;
+    }
+
+    .tile-dinding { border-bottom: 3px solid #ea580c; }
+    .tile-dinding .tile-icon-wrap { background: #ffedd5; color: #c2410c; }
+
+    .tile-beton { border-bottom: 3px solid #2563eb; }
+    .tile-beton .tile-icon-wrap { background: #dbeafe; color: #1d4ed8; }
+
+    .tile-atap { border-bottom: 3px solid #d97706; }
+    .tile-atap .tile-icon-wrap { background: #fef3c7; color: #b45309; }
+
+    .tile-dak { border-bottom: 3px solid #0891b2; }
+    .tile-dak .tile-icon-wrap { background: #cffafe; color: #0e7490; }
+
+    .tile-pondasi { border-bottom: 3px solid #57534e; }
+    .tile-pondasi .tile-icon-wrap { background: #e7e5e4; color: #44403c; }
+
+    .tile-teralis { border-bottom: 3px solid #7c3aed; }
+    .tile-teralis .tile-icon-wrap { background: #ede9fe; color: #6d28d9; }
+
+    .tile-lantai { border-bottom: 3px solid #0d9488; }
+    .tile-lantai .tile-icon-wrap { background: #ccfbf1; color: #0f766e; }
+
+    .tile-cat { border-bottom: 3px solid #e11d48; }
+    .tile-cat .tile-icon-wrap { background: #ffe4e6; color: #be123c; }
+
+    .tile-plafon { border-bottom: 3px solid #4f46e5; }
+    .tile-plafon .tile-icon-wrap { background: #e0e7ff; color: #4338ca; }
+
+    .home-footer {
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      padding: 8px 4px 4px;
+    }
+
+    .home-footer.hidden {
+      display: none;
+    }
+
+    .home-footer strong {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .panel-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .btn-back-home {
+      background: #ffffff;
+      color: var(--primary);
+      border: 1.5px solid var(--primary);
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-reset-panel {
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .action-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .btn-reset-main {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+      border-radius: 8px;
+      padding: 11px 14px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 12px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 6px;
+    }
+
+    .group-box {
+      background: var(--sub-bg);
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 12px;
+    }
+
+    .price-box {
+      background: var(--price-bg);
+      border: 1px solid var(--price-border);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 12px;
+    }
+
+    .group-header {
+      font-size: 12px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .price-box .group-header {
+      color: var(--primary);
+    }
+
+    .sub-ring-box {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed #cbd5e1;
+    }
+
+    .sub-ring-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .row-item {
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed #e2e8f0;
+    }
+
+    .row-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .row-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .field {
+      margin-bottom: 8px;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 3px;
+      color: var(--muted);
+    }
+
+    .label-with-select {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 3px;
+    }
+
+    .label-with-select label {
+      margin-bottom: 0;
+    }
+
+    .select-mini {
+      width: auto;
+      padding: 2px 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary);
+      background: #ffffff;
+      border: 1px solid #86efac;
+      border-radius: 5px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px 9px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 13.5px;
+      background: #ffffff;
+      color: var(--text);
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .add-bukaan-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .btn-add-bukaan {
+      background: #ffffff;
+      border: 1px dashed var(--primary);
+      color: var(--primary);
+      border-radius: 8px;
+      padding: 8px 6px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .btn-add-bukaan.opened {
+      display: none;
+    }
+
+    .bukaan-extra {
+      display: none;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed #cbd5e1;
+    }
+
+    .bukaan-extra.show {
+      display: block;
+    }
+
+    .hint-box {
+      font-size: 11.5px;
+      background: var(--primary-soft);
+      border: 1px solid #86efac;
+      color: var(--primary-dark);
+      padding: 8px 10px;
+      border-radius: 6px;
+      margin-top: 8px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 11px 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .btn:active {
+      opacity: 0.85;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-copy {
+      background: var(--success);
+      color: #ffffff;
+      margin-top: 10px;
+    }
+
+    .btn-pdf {
+      background: var(--primary-dark);
+      color: #ffffff;
+      margin-top: 8px;
+    }
+
+    .btn-rekap-shortcut {
+      background: #d97706;
+      color: #ffffff;
+      margin-top: 8px;
+    }
+
+    .result-box {
+      margin-top: 12px;
+      background: var(--price-bg);
+      border: 1px solid var(--price-border);
+      border-radius: 8px;
+      padding: 12px;
+      display: none;
+    }
+
+    .result-box.show {
+      display: block;
+    }
+
+    .pdf-header-print {
+      display: none;
+    }
+
+    .result-divider {
+      height: 1px;
+      background: #86efac;
+      margin: 8px 0;
+    }
+
+    .result-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 5px 0;
+      border-bottom: 1px dashed #cbd5e1;
+      font-size: 13px;
+    }
+
+    .result-item:last-of-type {
+      border-bottom: none;
+    }
+
+    .result-item strong {
+      color: var(--primary);
+      text-align: right;
+    }
+
+    .sub-price {
+      display: block;
+      font-size: 12px;
+      color: var(--success);
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .result-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--primary);
+      border: 1px solid var(--primary-dark);
+      padding: 9px 10px;
+      border-radius: 6px;
+      margin-top: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .note {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    .rekap-filter-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .rekap-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .rekap-chip input[type="checkbox"] {
+      width: auto;
+      margin: 0;
+      accent-color: var(--primary);
+    }
+
+    .rekap-chip.checked {
+      background: var(--primary-soft);
+      border-color: var(--primary);
+      color: var(--primary-dark);
+    }
+
+    .rekap-section-block {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      break-inside: avoid;
+    }
+
+    .rekap-section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1.5px solid #e2e8f0;
+      padding-bottom: 6px;
+      margin-bottom: 6px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .rekap-subtotal-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px solid #cbd5e1;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .rekap-empty {
+      text-align: center;
+      padding: 24px 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media print {
+      body {
+        background: #ffffff !important;
+        padding: 0 !important;
+        color: #0f172a !important;
+      }
+
+      .home-header,
+      .rekap-banner,
+      .home-menu-grid,
+      .home-footer,
+      .panel-topbar,
+      .action-row,
+      .section-title,
+      .group-box,
+      .price-box,
+      .rekap-filter-wrap,
+      .btn-primary,
+      .btn-copy,
+      .btn-pdf,
+      .btn-rekap-shortcut,
+      .note {
+        display: none !important;
+      }
+
+      .card {
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      .tab-panel:not(.active) {
+        display: none !important;
+      }
+
+      .result-box.show,
+      #rekap-print-area {
+        display: block !important;
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 8px !important;
+        padding: 16px !important;
+        margin-top: 0 !important;
+      }
+
+      .pdf-header-print {
+        display: block !important;
+        border-bottom: 2px solid var(--primary);
+        padding-bottom: 8px;
+        margin-bottom: 12px;
+      }
+
+      .pdf-header-print h2 {
+        font-size: 16px;
+        color: var(--primary);
+      }
+
+      .pdf-header-print p {
+        font-size: 11.5px;
+        color: #475569;
+        margin-top: 2px;
+      }
+
+      .result-total {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        background: var(--primary) !important;
+        color: #ffffff !important;
+      }
+
+      .sub-price {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        color: var(--success) !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="home-header">
+    <div class="brand-badge">★ abee azka</div>
+    <h1>Kalkulator Material & Estimasi Biaya Bangunan</h1>
+    <p>Menghitung RAB jadi mudah dan efisien</p>
+  </header>
+
+  <div id="rekap-banner" class="rekap-banner hidden">
+    <div class="rekap-banner-info">
+      <strong id="rekap-banner-title">0 Pekerjaan Tersimpan</strong>
+      <span id="rekap-banner-total">Total Sementara: Rp 0</span>
+    </div>
+    <button type="button" class="btn-open-rekap" onclick="openRekapPanel()">Rekap & Cetak Semua</button>
+  </div>
+
+  <section class="home-menu-grid" aria-label="Menu Kalkulator Bangunan">
+    <button type="button" id="tile-dinding" class="menu-tile tile-dinding" onclick="switchTab('dinding', this)">
+      <span class="tile-badge-done">✓</span>
+      <div class="tile-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="5" rx="1"/>
+          <rect x="3" y="10" width="8" height="5" rx="1"/>
+          <rect x="12" y="10" width="9" height="5" rx="1"/>
+          <rect x="3" y="16" width="12" height="5" rx="1"/>
+          <rect x="16" y="16" width="5" height="5" rx="1"/>
+        </svg>
+      </div>
+      <span>Dinding</span>
+    </button>
+
+    <button type="button" id="tile-beton" class="menu-tile tile-beton" onclick="switchTab('beton', this)">
+      <span class="tile-badge-done">✓</span>
+      <div class="tile-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 20h16"/>
+          <path d="M7 20V8l5-4 5 4v12"/>
+          <path d="M7 12h10"/>
+          <path d="M7 16h10"/>
+        </svg>
+      </div>
+      <span>Besi & Cor</span>
+    </button>
+
+    <button type="button" id="tile-atap" class="menu-tile tile-atap" onclick="switchTab('atap', this)">
+      <span class="tile-badge-done">✓</span>
+      <div class="tile-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 11l9-7 9 7"/>
+          <path d="M5 10v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9"/>
+        </svg>
+      </div>
+      <span>Atap</span>
+    </button>
+
+    <button type="button" id="tile-dak" class="menu-tile tile-dak" onclick="switchTab('dak', this)">
+      <span class="tile-badge-done">✓</span>
+      <div class="tile-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="6" width="18" height="4" rx="1"/>
+          <path d="M5 10v10"/>
+          <path d="M19 10v10"/>
+          <path d="M5 14h14"/>
+        </svg>
+      </div>
+      <span>Dak</span>
+    </button>
+
+    <button type="button" id="tile-pondasi" class="menu-tile tile-pondasi" onclick="switchTab('pondasi', this)">
+      <span class="tile-badge-done">✓</span>
+      <div class="tile-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19h16"/>
+          <path d="M6 19l2-8h8l2 8"/>
+          <path d="M9 11l1-4h4l1 4"/>
+        </svg>
+      </div>
+      <span>Batu Pondasi</span>
+    </button>
+
+    <button type="button" id="tile-teralis" class="menu-tile tile-teralis" onclick="switchTab('teralis', this)">
+      <span class="tile-badge-done">✓</span>
+      <div class="tile-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="3" width="16" height="18" rx="1"/>
+          <path d="M9 3v18"/>
+          <path d="M15 3v18"/>
+          <path d="M4 12h16"/>
+        </svg>
+      </div>
+      <span>Teralis</span>
+    </button>
+
+    <button type="button" id="tile-lantai" class="menu-tile tile-lantai" onclick="switchTab('lantai', this)">
+      <span class="tile-badge-done">✓</span>
+      <div class="tile-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3l9 5-9 5-9-5 9-5z"/>
+          <path d="M3 13l9 5 9-5"/>
+          <path d="M3 18l9 4 9-4"/>
+        </svg>
+      </div>
+      <span>Lantai</span>
+    </button>
+
+    <button type="button" id="tile-cat" class="menu-tile tile-cat" onclick="switchTab('cat', this)">
+      <span class="tile-badge-done">✓</span>
+      <div class="tile-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 3H7a2 2 0 0 0-2 2v3h14V5a2 2 0 0 0-2-2z"/>
+          <path d="M19 8v2a2 2 0 0 1-2 2h-4v3"/>
+          <rect x="11" y="15" width="4" height="6" rx="1"/>
+        </svg>
+      </div>
+      <span>Cat</span>
+    </button>
+
+    <button type="button" id="tile-plafon" class="menu-tile tile-plafon" onclick="switchTab('plafon', this)">
+      <span class="tile-badge-done">✓</span>
+      <div class="tile-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="16" rx="2"/>
+          <path d="M3 10h18"/>
+          <path d="M3 15h18"/>
+          <path d="M9 4v16"/>
+          <path d="M15 4v16"/>
+        </svg>
+      </div>
+      <span>Plafon</span>
+    </button>
+  </section>
+
+  <footer class="home-footer">
+    Dikembangkan oleh <strong>abee azka</strong> • Kalkulator RAB Bangunan
+  </footer>
+
+  <!-- PANEL REKAP GABUNGAN & CETAK SEKALIGUS -->
+  <section id="tab-rekap" class="tab-panel">
+    <div class="card">
+      <div class="panel-topbar">
+        <button type="button" class="btn-back-home" onclick="goHome()">← Kembali ke Beranda</button>
+        <button type="button" class="btn-reset-panel" onclick="hapusSemuaRekap()">Hapus Semua Rekap</button>
+      </div>
+      <div class="section-title">Rekap Gabungan & Cetak Sekaligus</div>
+
+      <div id="rekap-filter-wrap" class="group-box rekap-filter-wrap">
+        <div class="group-header">Pilih Pekerjaan yang Ikut Dicetak</div>
+        <div id="rekap-filter-list" class="rekap-filter-list"></div>
+      </div>
+
+      <div id="rekap-print-area"></div>
+    </div>
+  </section>
+
+  <!-- TAB 1: DINDING -->
+  <section id="tab-dinding" class="tab-panel">
+    <div class="card">
+      <div class="panel-topbar">
+        <button type="button" class="btn-back-home" onclick="goHome()">← Kembali ke Beranda</button>
+        <button type="button" class="btn-reset-panel" onclick="resetPanel('dinding')">Reset</button>
+      </div>
+      <div class="section-title">1. Pasangan Dinding, Plester & Acian</div>
+
+      <div class="group-box">
+        <div class="group-header">A. Dimensi Bangunan Utama (Keliling Luar)</div>
+        <div class="grid-3">
+          <div>
+            <label>Panjang (m)</label>
+            <input type="number" id="d-bang-p" step="0.01" />
+          </div>
+          <div>
+            <label>Lebar (m)</label>
+            <input type="number" id="d-bang-l" step="0.01" />
+          </div>
+          <div>
+            <label>Tinggi (m)</label>
+            <input type="number" id="d-bang-t" step="0.01" />
+          </div>
+        </div>
+
+        <div id="dinding-l-extra" class="bukaan-extra">
+          <div class="row-label">Bagian Sayap L (Tambahan)</div>
+          <div class="grid-3">
+            <div>
+              <label>Panjang Sayap (m)</label>
+              <input type="number" id="d-l2-p" step="0.01" />
+            </div>
+            <div>
+              <label>Lebar Sayap (m)</label>
+              <input type="number" id="d-l2-l" step="0.01" />
+            </div>
+            <div>
+              <label>Tinggi Sayap (m)</label>
+              <input type="number" id="d-l2-t" step="0.01" />
+            </div>
+          </div>
+
+          <div class="row-label" style="margin-top: 8px;">Pengurangan "Liong" (Tanpa Bata/Tembok)</div>
+          <div class="grid-2">
+            <div>
+              <label>Panjang Liong (m)</label>
+              <input type="number" id="d-liong-p" step="0.01" />
+            </div>
+            <div>
+              <label>Tinggi Liong (m)</label>
+              <input type="number" id="d-liong-t" step="0.01" />
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 8px;">
+          <button type="button" class="btn-add-bukaan" onclick="bukaDindingL(this)">+ Bagian L / Liong</button>
+        </div>
+      </div>
+
+      <div class="group-box">
+        <div class="group-header">B. Dinding Sekat / Kamar (Dalam)</div>
+        <div class="row-item">
+          <div class="row-label">Sekat / Kamar 1</div>
+          <div class="grid-2">
+            <div>
+              <label>Panjang (m)</label>
+              <input type="number" id="d-sek1-p" step="0.01" />
+            </div>
+            <div>
+              <label>Tinggi (m)</label>
+              <input type="number" id="d-sek1-t" step="0.01" />
+            </div>
+          </div>
+        </div>
+
+        <div class="row-item">
+          <div class="row-label">Sekat / Kamar 2</div>
+          <div class="grid-2">
+            <div>
+              <label>Panjang (m)</label>
+              <input type="number" id="d-sek2-p" step="0.01" />
+            </div>
+            <div>
+              <label>Tinggi (m)</label>
+              <input type="number" id="d-sek2-t" step="0.01" />
+            </div>
+          </div>
+        </div>
+
+        <div class="row-item">
+          <div class="row-label">Sekat / Kamar 3</div>
+          <div class="grid-2">
+            <div>
+              <label>Panjang (m)</label>
+              <input type="number" id="d-sek3-p" step="0.01" />
+            </div>
+            <div>
+              <label>Tinggi (m)</label>
+              <input type="number" id="d-sek3-t" step="0.01" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="group-box">
+        <div class="group-header">C. Pengurangan Bukaan Pintu</div>
+
+        <div class="row-item">
+          <div class="row-label">Pintu 1</div>
+          <div class="grid-3">
+            <div>
+              <label>Lebar (m)</label>
+              <input type="number" id="p1-l" step="0.01" />
+            </div>
+            <div>
+              <label>Tinggi (m)</label>
+              <input type="number" id="p1-t" step="0.01" />
+            </div>
+            <div>
+              <label>Jumlah (unit)</label>
+              <input type="number" id="p1-jml" step="1" />
+            </div>
+          </div>
+        </div>
+
+        <div id="pintu-extra-2" class="bukaan-extra row-item">
+          <div class="row-label">Pintu 2</div>
+          <div class="grid-3">
+            <div>
+              <label>Lebar (m)</label>
+              <input type="number" id="p2-l" step="0.01" />
+            </div>
+            <div>
+              <label>Tinggi (m)</label>
+              <input type="number" id="p2-t" step="0.01" />
+            </div>
+            <div>
+              <label>Jumlah (unit)</label>
+              <input type="number" id="p2-jml" step="1" />
+            </div>
+          </div>
+        </div>
+
+        <div id="pintu-extra-3" class="bukaan-extra row-item">
+          <div class="row-label">Pintu 3</div>
+          <div class="grid-3">
+            <div>
+              <label>Lebar (m)</label>
+              <input type="number" id="p3-l" step="0.01" />
+            </div>
+            <div>
+              <label>Tinggi (m)</label>
+              <input type="number" id="p3-t" step="0.01" />
+            </div>
+            <div>
+              <label>Jumlah (unit)</label>
+              <input type="number" id="p3-jml" step="1" />
+            </div>
+          </div>
+        </div>
+
+        <div id="pintu-extra-4" class="bukaan-extra row-item">
+          <div class="row-label">Pintu 4</div>
+          <div class="grid-3">
+            <div>
+              <label>Lebar (m)</label>
+              <input type="number" id="p4-l" step="0.01" />
+            </div>
+            <div>
+              <label>Tinggi (m)</label>
+              <input type="number" id="p4-t" step="0.01" />
+            </div>
+            <div>
+              <label>Jumlah (unit)</label>
+              <input type="number" id="p4-jml" step="1" />
+            </div>
+          </div>
+        </div>
+
+        <div class="add-bukaan-grid">
+          <button type="button" id="btn-pintu-2" class="btn-add-bukaan" onclick="bukaBukaan('pintu', 2, this)">+ Pintu 2</button>
+          <button type="button" id="btn-pintu-3" class="btn-add-bukaan" onclick="bukaBukaan('pintu', 3, this)">+ Pintu 3</button>
+          <button type="button" id="btn-pintu-4" class="btn-add-bukaan" onclick="bukaBukaan('pintu', 4, this)">+ Pintu 4</button>
+        </div>
+      </div>
+
+      <div class="group-box">
+        <div class="group-header">D. Pengurangan Bukaan Jendela</div>
+
+        <div class="row-item">
+          <div class="row-label">Jendela 1</div>
+          <div class="grid-3">
+            <div>
+              <label>Lebar (m)</label>
+              <input type="number" id="j1-l" step="0.01" />
+            </div>
+            <div>
+              <label>Tinggi (m)</label>
+              <input type="number" id="j1-t" step="0.01" />
+            </div>
+            <div>
+              <label>Jumlah (unit)</label>
+              <input type="number" id="j1-jml" step="1" />
+            </div>
+          </div>
+        </div>
+
+        <div id="jendela-extra-2" class="bukaan-extra row-item">
+          <div class="row-label">Jendela 2</div>
+          <div class="grid-3">
+            <div>
+              <label>Lebar (m)</label>
+              <input type="number" id="j2-l" step="0.01" />
+            </div>
+            <div>
+              <label>Tinggi (m)</label>
+              <input type="number" id="j2-t" step="0.01" />
+            </div>
+            <div>
+              <label>Jumlah (unit)</label>
+              <input type="number" id="j2-jml" step="1" />
+            </div>
+          </div>
+        </div>
+
+        <div id="jendela-extra-3" class="bukaan-extra row-item">
+          <div class="row-label">Jendela 3</div>
+          <div class="grid-3">
+            <div>
+              <label>Lebar (m)</label>
+              <input type="number" id="j3-l" step="0.01" />
+            </div>
+            <div>
+              <label>Tinggi (m)</label>
+              <input type="number" id="j3-t" step="0.01" />
+            </div>
+            <div>
+              <label>Jumlah (unit)</label>
+              <input type="number" id="j3-jml" step="1" />
+            </div>
+          </div>
+        </div>
+
+        <div id="jendela-extra-4" class="bukaan-extra row-item">
+          <div class="row-label">Jendela 4</div>
+          <div class="grid-3">
+            <div>
+              <label>Lebar (m)</label>
+              <input type="number" id="j4-l" step="0.01" />
+            </div>
+            <div>
+              <label>Tinggi (m)</label>
+              <input type="number" id="j4-t" step="0.01" />
+            </div>
+            <div>
+              <label>Jumlah (unit)</label>
+              <input type="number" id="j4-jml" step="1" />
+            </div>
+          </div>
+        </div>
+
+        <div class="add-bukaan-grid">
+          <button type="button" id="btn-jendela-2" class="btn-add-bukaan" onclick="bukaBukaan('jendela', 2, this)">+ Jendela 2</button>
+          <button type="button" id="btn-jendela-3" class="btn-add-bukaan" onclick="bukaBukaan('jendela', 3, this)">+ Jendela 3</button>
+          <button type="button" id="btn-jendela-4" class="btn-add-bukaan" onclick="bukaBukaan('jendela', 4, this)">+ Jendela 4</button>
+        </div>
+      </div>
+
+      <div class="group-box">
+        <div class="group-header">E. Spesifikasi Bata, Nat & Plesteran</div>
+        <div class="grid-2">
+          <div>
+            <label>Jenis & Ukuran Material</label>
+            <select id="d-jenis" onchange="toggleNatField()">
+              <option value="merah">Bata Merah (20×10×5 cm)</option>
+              <option value="hebel">Hebel (60×20×7,5 cm)</option>
+            </select>
+          </div>
+          <div>
+            <label>Sisi Plester & Acian</label>
+            <select id="d-sisi">
+              <option value="2">2 Sisi (Luar & Dalam)</option>
+              <option value="1">1 Sisi Saja</option>
+              <option value="0">Tanpa Plester/Acian</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="nat-wrap" class="field" style="margin-top: 8px;">
+          <label>Tebal Nat Bata Merah (cm)</label>
+          <input type="number" id="d-nat" step="0.1" />
+        </div>
+
+        <div class="hint-box" id="info-aturan">
+          <strong>Bata Merah (20×10×5 cm):</strong> Nat standar 2 cm → ukuran efektif 0,22 m × 0,07 m (~64,94 buah/m²).
+        </div>
+      </div>
+
+      <div class="price-box">
+        <div class="group-header">F. Input Harga Satuan Material (Rp)</div>
+        <div class="grid-2">
+          <div id="wrap-harga-bata">
+            <label>Bata Merah / biji (Rp)</label>
+            <input type="number" id="hrg-bata-merah" step="50" />
+          </div>
+          <div id="wrap-harga-hebel" style="display:none;">
+            <label>Hebel / biji (Rp)</label>
+            <input type="number" id="hrg-hebel" step="100" />
+          </div>
+          <div id="wrap-harga-mortar" style="display:none;">
+            <label>Perekat Hebel / sak (Rp)</label>
+            <input type="number" id="hrg-mortar" step="1000" />
+          </div>
+          <div>
+            <div class="label-with-select">
+              <label for="hrg-d-semen">Semen PC / sak (Rp)</label>
+              <select id="d-semen-kg" class="select-mini" onchange="updatePlaceholderSemen('d-semen-kg', 'hrg-d-semen')">
+                <option value="40" selected>40 kg</option>
+                <option value="50">50 kg</option>
+              </select>
+            </div>
+            <input type="number" id="hrg-d-semen" step="500" placeholder="Harga / sak 40 kg" />
+          </div>
+          <div>
+            <label>Pasir / m³ (Rp)</label>
+            <input type="number" id="hrg-d-pasir" step="5000" />
+          </div>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button type="button" class="btn btn-primary" onclick="hitungDinding()">Hitung Material & Biaya Dinding</button>
+        <button type="button" class="btn-reset-main" onclick="resetPanel('dinding')">Reset</button>
+      </div>
+
+      <div id="res-dinding" class="result-box"></div>
+    </div>
+  </section>
+
+  <!-- TAB 2: BESI & BETON -->
+  <section id="tab-beton" class="tab-panel">
+    <div class="card">
+      <div class="panel-topbar">
+        <button type="button" class="btn-back-home" onclick="goHome()">← Kembali ke Beranda</button>
+        <button type="button" class="btn-reset-panel" onclick="resetPanel('beton')">Reset</button>
+      </div>
+      <div class="section-title">2. Besi (12 m/Batang), Ukuran Besi & Cor Beton</div>
+
+      <div class="group-box">
+        <div class="group-header">1. Besi Tulangan (Jalur Mendatar / Keliling)</div>
+        <div class="grid-3">
+          <div>
+            <label>Panjang (m)</label>
+            <input type="number" id="bt-p" step="0.01" />
+          </div>
+          <div>
+            <label>Lebar (m)</label>
+            <input type="number" id="bt-l" step="0.01" />
+          </div>
+          <div>
+            <label>Isi Tulangan (btg)</label>
+            <input type="number" id="bt-isi" step="1" />
+          </div>
+        </div>
+        <div class="grid-3" style="margin-top: 8px;">
+          <div>
+            <label>Diameter Besi (mm)</label>
+            <select id="bt-dia" onchange="syncHargaBesiFields()">
+              <option value="6">6 mm</option>
+              <option value="8">8 mm</option>
+              <option value="10" selected>10 mm</option>
+              <option value="12">12 mm</option>
+              <option value="13">13 mm</option>
+            </select>
+          </div>
+          <div>
+            <label>Susun Jalur (jalur)</label>
+            <select id="bt-susun">
+              <option value="2" selected>2 Jalur (Bawah + Atas)</option>
+              <option value="1">1 Jalur Saja</option>
+            </select>
+          </div>
+          <div>
+            <label>Sekat Dalam (m)</label>
+            <input type="number" id="bt-sekat" step="0.1" />
+          </div>
+        </div>
+
+        <div class="sub-ring-box">
+          <div class="sub-ring-title">Ring Besi Tulangan (Jalur Mendatar)</div>
+          <div class="grid-4">
+            <div>
+              <label>Panjang Ring (cm)</label>
+              <input type="number" id="rg-tul-p" step="0.5" />
+            </div>
+            <div>
+              <label>Lebar Ring (cm)</label>
+              <input type="number" id="rg-tul-l" step="0.5" />
+            </div>
+            <div>
+              <label>Jarak Ring (cm)</label>
+              <input type="number" id="rg-tul-jarak" step="1" />
+            </div>
+            <div>
+              <label>Diameter Ring (mm)</label>
+              <select id="rg-tul-dia" onchange="syncHargaBesiFields()">
+                <option value="6" selected>6 mm</option>
+                <option value="8">8 mm</option>
+                <option value="10">10 mm</option>
+                <option value="12">12 mm</option>
+                <option value="13">13 mm</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="ring-tul-extra-2" class="bukaan-extra">
+            <div class="sub-ring-title">Ring Besi Tulangan 2 (Opsional)</div>
+            <div class="grid-4">
+              <div>
+                <label>Panjang Ring 2 (cm)</label>
+                <input type="number" id="rg-tul2-p" step="0.5" />
+              </div>
+              <div>
+                <label>Lebar Ring 2 (cm)</label>
+                <input type="number" id="rg-tul2-l" step="0.5" />
+              </div>
+              <div>
+                <label>Jarak Ring 2 (cm)</label>
+                <input type="number" id="rg-tul2-jarak" step="1" />
+              </div>
+              <div>
+                <label>Diameter Ring 2 (mm)</label>
+                <select id="rg-tul2-dia" onchange="syncHargaBesiFields()">
+                  <option value="6" selected>6 mm</option>
+                  <option value="8">8 mm</option>
+                  <option value="10">10 mm</option>
+                  <option value="12">12 mm</option>
+                  <option value="13">13 mm</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 8px;">
+            <button type="button" class="btn-add-bukaan" onclick="bukaRingTul2(this)">+ Ukuran Ring Mendatar Lain</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="group-box">
+        <div class="group-header">2. Tiang / Kolom</div>
+        <div class="grid-2">
+          <div>
+            <label>Tinggi Tiang (m)</label>
+            <input type="number" id="tk-p" step="0.01" />
+          </div>
+          <div>
+            <label>Jumlah Tiang (titik)</label>
+            <input type="number" id="tk-jml" step="1" />
+          </div>
+        </div>
+        <div class="grid-2" style="margin-top: 8px;">
+          <div>
+            <label>Isi Tulangan (btg/tiang)</label>
+            <input type="number" id="tk-isi" step="1" />
+          </div>
+          <div>
+            <label>Diameter Besi Tiang (mm)</label>
+            <select id="tk-dia" onchange="syncHargaBesiFields()">
+              <option value="6">6 mm</option>
+              <option value="8">8 mm</option>
+              <option value="10" selected>10 mm</option>
+              <option value="12">12 mm</option>
+              <option value="13">13 mm</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="sub-ring-box">
+          <div class="sub-ring-title">Ring Tiang / Kolom</div>
+          <div class="grid-4">
+            <div>
+              <label>Panjang Ring (cm)</label>
+              <input type="number" id="rg-tk-p" step="0.5" />
+            </div>
+            <div>
+              <label>Lebar Ring (cm)</label>
+              <input type="number" id="rg-tk-l" step="0.5" />
+            </div>
+            <div>
+              <label>Jarak Ring (cm)</label>
+              <input type="number" id="rg-tk-jarak" step="1" />
+            </div>
+            <div>
+              <label>Diameter Ring (mm)</label>
+              <select id="rg-tk-dia" onchange="syncHargaBesiFields()">
+                <option value="6" selected>6 mm</option>
+                <option value="8">8 mm</option>
+                <option value="10">10 mm</option>
+                <option value="12">12 mm</option>
+                <option value="13">13 mm</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="hint-box">
+          <strong>Aturan Selimut Cor (+5 cm):</strong> Ukuran hasil cor otomatis ditambah <strong>5 cm</strong> dari ukuran ring masing-masing bagian (2,5 cm tiap sisi).<br/>
+          <strong>Standar Besi:</strong> 1 batang = <strong>12 meter</strong>.
+        </div>
+      </div>
+
+      <div class="group-box">
+        <div class="group-header">3. Mutu Adukan Cor & Cadangan</div>
+        <div class="grid-2">
+          <div>
+            <label>Mutu Campuran</label>
+            <select id="b-mutu">
+              <option value="k225">K-225 (~8.2 sak/m³)</option>
+              <option value="k175">K-175 (~7.5 sak/m³)</option>
+              <option value="rabat">Beton Rabat (~6 sak/m³)</option>
+            </select>
+          </div>
+          <div>
+            <label>Cadangan Sambungan Besi (%)</label>
+            <select id="b-waste">
+              <option value="1.10" selected>10% (Standar Sambungan)</option>
+              <option value="1.05">5% (Minimal)</option>
+              <option value="1.00">0% (Hitungan Murni)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="price-box">
+        <div class="group-header">4. Input Harga Satuan Besi & Material Cor (Rp)</div>
+        <div class="grid-2" id="harga-besi-container"></div>
+        <div class="grid-2" style="margin-top: 8px;">
+          <div>
+            <label>Kawat Bendrat / kg (Rp)</label>
+            <input type="number" id="hrg-bendrat" step="500" />
+          </div>
+          <div>
+            <div class="label-with-select">
+              <label for="hrg-b-semen">Semen PC / sak (Rp)</label>
+              <select id="b-semen-kg" class="select-mini" onchange="updatePlaceholderSemen('b-semen-kg', 'hrg-b-semen')">
+                <option value="40" selected>40 kg</option>
+                <option value="50">50 kg</option>
+              </select>
+            </div>
+            <input type="number" id="hrg-b-semen" step="500" placeholder="Harga / sak 40 kg" />
+          </div>
+          <div>
+            <label>Pasir Beton / m³ (Rp)</label>
+            <input type="number" id="hrg-b-pasir" step="5000" />
+          </div>
+          <div>
+            <label>Batu Split / m³ (Rp)</label>
+            <input type="number" id="hrg-b-split" step="5000" />
+          </div>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button type="button" class="btn btn-primary" onclick="hitungBeton()">Hitung Besi (12 m), Cor & Estimasi Biaya</button>
+        <button type="button" class="btn-reset-main" onclick="resetPanel('beton')">Reset</button>
+      </div>
+
+      <div id="res-beton" class="result-box"></div>
+    </div>
+  </section>
+
+  <!-- TAB 3: STRUKTUR ATAS -->
+  <section id="tab-atap" class="tab-panel">
+    <div class="card">
+      <div class="panel-topbar">
+        <button type="button" class="btn-back-home" onclick="goHome()">← Kembali ke Beranda</button>
+        <button type="button" class="btn-reset-panel" onclick="resetPanel('atap')">Reset</button>
+      </div>
+      <div class="section-title">3. Struktur Atas: Rangka, Atap & Wuwung</div>
+
+      <div class="group-box">
+        <div class="group-header">A. Model Atap, Dimensi & Ekstra Waste</div>
+
+        <div class="field">
+          <label>Pilih Model Atap</label>
+          <select id="a-model" onchange="toggleModelAtap()">
+            <option value="bedengan" selected>1. Rumah Bedengan</option>
+            <option value="jurean">2. Rumah Jurean (Jurai)</option>
+          </select>
+        </div>
+
+        <div class="grid-3">
+          <div>
+            <label>Panjang Atap (m)</label>
+            <input type="number" id="a-p" step="0.01" />
+          </div>
+          <div>
+            <label>Lebar Bentang (m)</label>
+            <input type="number" id="a-l" step="0.01" />
+          </div>
+          <div>
+            <label>Kemiringan (derajat)</label>
+            <input type="number" id="a-sudut" step="1" />
+          </div>
+        </div>
+
+        <div id="jurean-extra-box" style="display:none; margin-top: 8px;">
+          <div class="grid-2">
+            <div>
+              <label>Panjang Jurai / Bubungan (m)</label>
+              <input type="number" id="a-jurai-p" step="0.1" />
+            </div>
+            <div>
+              <label>Panjang Wuwung Utama (m)</label>
+              <input type="number" id="a-wuwung-p" step="0.1" />
+            </div>
+          </div>
+        </div>
+
+        <div id="bedengan-extra-box" style="margin-top: 8px;">
+          <div>
+            <label>Panjang Wuwung (m)</label>
+            <input type="number" id="a-wuwung-bedeng-p" step="0.1" />
+          </div>
+        </div>
+
+        <div id="atap-sayap-l-extra" class="bukaan-extra">
+          <div class="row-label">Bidang / Sayap Atap Tambahan (Bentuk L)</div>
+          <div class="grid-3">
+            <div>
+              <label>Panjang Sayap (m)</label>
+              <input type="number" id="a2-p" step="0.01" />
+            </div>
+            <div>
+              <label>Lebar Bentang 2 (m)</label>
+              <input type="number" id="a2-l" step="0.01" />
+            </div>
+            <div>
+              <label>Wuwung Sayap 2 (m)</label>
+              <input type="number" id="a2-wuwung-p" step="0.1" />
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 8px;">
+          <button type="button" class="btn-add-bukaan" onclick="bukaAtapSayapL(this)">+ Sayap Atap (Bentuk L)</button>
+        </div>
+
+        <div class="grid-2" style="margin-top: 8px;">
+          <div>
+            <label>Cadangan Potongan Utama (%)</label>
+            <select id="a-waste">
+              <option value="1.10" selected>10% (Standar)</option>
+              <option value="1.05">5% (Minimal)</option>
+              <option value="1.15">15% (Banyak Potongan)</option>
+              <option value="1.00">0% (Tanpa Cadangan)</option>
+            </select>
+          </div>
+          <div>
+            <label>Ekstra Waste (%) — Opsional</label>
+            <input type="number" id="a-extra-waste" step="0.5" min="0" />
+          </div>
+        </div>
+      </div>
+
+      <div class="group-box">
+        <div class="group-header">B. Pilihan Rangka Struktur Atas</div>
+        <div class="field">
+          <label>Jenis Rangka</label>
+          <select id="a-rangka" onchange="toggleRangkaAtap()">
+            <option value="kayu">1. Kayu (Balok/Usuk, Reng & Paku)</option>
+            <option value="bajaringan">2. Baja Ringan (Profil C75, Reng & Kebutuhan Lainnya)</option>
+          </select>
+        </div>
+
+        <div id="rangka-kayu-box">
+          <div class="grid-3">
+            <div>
+              <label>Jarak Usuk (cm)</label>
+              <input type="number" id="kayu-jarak-usuk" step="5" />
+            </div>
+            <div>
+              <label>Jarak Reng (cm)</label>
+              <input type="number" id="kayu-jarak-reng" step="2" />
+            </div>
+            <div>
+              <label>Panjang Kayu (m/btg)</label>
+              <input type="number" id="kayu-pjg-btg" step="0.5" />
+            </div>
+          </div>
+          <div class="hint-box">
+            <strong>Kayu:</strong> Menghitung batang <strong>Kayu Balok/Usuk</strong>, batang <strong>Reng Kayu</strong>, dan estimasi <strong>Paku (kg)</strong>.
+          </div>
+        </div>
+
+        <div id="rangka-bajaringan-box" style="display:none;">
+          <div class="grid-3">
+            <div>
+              <label>Jarak Kaso C75 (cm)</label>
+              <input type="number" id="br-jarak-kaso" step="5" />
+            </div>
+            <div>
+              <label>Jarak Reng BR (cm)</label>
+              <input type="number" id="br-jarak-reng" step="2" />
+            </div>
+            <div>
+              <label>Panjang Profil (m/btg)</label>
+              <input type="number" id="br-pjg-btg" step="0.5" />
+            </div>
+          </div>
+          <div class="hint-box">
+            <strong>Baja Ringan:</strong> Menghitung batang <strong>Kanal C75 (Balok/Kaso)</strong>, batang <strong>Reng Baja Ringan</strong>, serta kebutuhan pendukung (<strong>Sekrup & Dynabolt</strong>).
+          </div>
+        </div>
+      </div>
+
+      <div class="group-box">
+        <div class="group-header">C. Penutup Atap & Wuwung</div>
+        <div class="grid-2">
+          <div>
+            <label>Jenis Penutup Atap</label>
+            <select id="a-jenis-atap" onchange="updateEfektifAtap()">
+              <option value="0.616" selected>Genteng Metal (0,616 m²/lembar)</option>
+              <option value="0.11">Genteng Beton/Keramik (±9 bh/m²)</option>
+              <option value="0.76">Atap Spandek (0,76 m²/lembar)</option>
+            </select>
+          </div>
+          <div>
+            <label>Efektif 1 Wuwung (m)</label>
+            <input type="number" id="a-wuwung-efektif" step="0.01" />
+          </div>
+        </div>
+      </div>
+
+      <div class="price-box">
+        <div class="group-header">D. Input Harga Satuan Struktur Atas (Rp)</div>
+
+        <div id="harga-kayu-inputs" class="grid-3">
+          <div>
+            <label>Kayu Balok/Usuk / btg (Rp)</label>
+            <input type="number" id="hrg-kayu-balok" step="1000" />
+          </div>
+          <div>
+            <label>Reng Kayu / btg (Rp)</label>
+            <input type="number" id="hrg-kayu-reng" step="1000" />
+          </div>
+          <div>
+            <label>Paku / kg (Rp)</label>
+            <input type="number" id="hrg-paku" step="1000" />
+          </div>
+        </div>
+
+        <div id="harga-br-inputs" class="grid-3" style="display:none;">
+          <div>
+            <label>Kanal C75 / btg (Rp)</label>
+            <input type="number" id="hrg-br-c75" step="1000" />
+          </div>
+          <div>
+            <label>Reng BR / btg (Rp)</label>
+            <input type="number" id="hrg-br-reng" step="1000" />
+          </div>
+          <div>
+            <label>Sekrup & Dynabolt / pak (Rp)</label>
+            <input type="number" id="hrg-br-aks" step="1000" />
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-top: 8px;">
+          <div>
+            <label>Penutup Atap / lbr atau bh (Rp)</label>
+            <input type="number" id="hrg-atap-unit" step="500" />
+          </div>
+          <div>
+            <label>Wuwung / bh (Rp)</label>
+            <input type="number" id="hrg-wuwung-unit" step="500" />
+          </div>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button type="button" class="btn btn-primary" onclick="hitungAtap()">Hitung Rangka, Atap, Wuwung & Biaya</button>
+        <button type="button" class="btn-reset-main" onclick="resetPanel('atap')">Reset</button>
+      </div>
+
+      <div id="res-atap" class="result-box"></div>
+    </div>
+  </section>
+
+  <!-- TAB 4: DAK -->
+  <section id="tab-dak" class="tab-panel">
+    <div class="card">
+      <div class="panel-topbar">
+        <button type="button" class="btn-back-home" onclick="goHome()">← Kembali ke Beranda</button>
+        <button type="button" class="btn-reset-panel" onclick="resetPanel('dak')">Reset</button>
+      </div>
+      <div class="section-title">4. Plat Dak Beton (P × L × T) & Alas Cor</div>
+
+      <div class="group-box">
+        <div class="group-header">A. Ukuran Dak Utama (P × L × T)</div>
+        <div class="grid-3">
+          <div>
+            <label>Panjang (m)</label>
+            <input type="number" id="dk-p" step="0.01" />
+          </div>
+          <div>
+            <label>Lebar (m)</label>
+            <input type="number" id="dk-l" step="0.01" />
+          </div>
+          <div>
+            <label>Tebal Dak (cm)</label>
+            <input type="number" id="dk-t" step="0.5" />
+          </div>
+        </div>
+
+        <div id="dak-sayap-extra" class="bukaan-extra">
+          <div class="row-label">Tambahan Sayap Dak (Bentuk L)</div>
+          <div class="grid-3">
+            <div>
+              <label>Panjang Sayap (m)</label>
+              <input type="number" id="dk2-p" step="0.01" />
+            </div>
+            <div>
+              <label>Lebar Sayap (m)</label>
+              <input type="number" id="dk2-l" step="0.01" />
+            </div>
+            <div>
+              <label>Tebal Sayap (cm)</label>
+              <input type="number" id="dk2-t" step="0.5" />
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 8px;">
+          <button type="button" class="btn-add-bukaan" onclick="bukaDakSayap(this)">+ Sayap Dak (Bentuk L)</button>
+        </div>
+      </div>
+
+      <div class="group-box">
+        <div class="group-header">B. Alas / Bekisting Dasaran Cor</div>
+        <div class="grid-2">
+          <div>
+            <label>Jenis Alas Dasaran Cor</label>
+            <select id="dk-alas" onchange="toggleAlasDak()">
+              <option value="tanpa" selected>Tidak Dihitung / Sudah Ada</option>
+              <option value="bondek">Bondek (Lebar efektif ~1 m/lembar)</option>
+              <option value="papan">Papan Bekisting Kayu (Papan 2×20 cm × 4 m)</option>
+              <option value="multiplex">Multiplex / Triplek (Lembaran 1,22 × 2,44 m)</option>
+            </select>
+          </div>
+          <div id="dk-alas-tebal-wrap" style="display:none;">
+            <label>Keterangan / Tebal Multiplex</label>
+            <select id="dk-multiplex-tebal">
+              <option value="9" selected>9 mm</option>
+              <option value="12">12 mm</option>
+              <option value="15">15 mm</option>
+              <option value="18">18 mm</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="dk-bondek-wrap" style="display:none; margin-top: 8px;">
+          <div class="grid-2">
+            <div>
+              <label>Panjang Bondek / lembar (m)</label>
+              <input type="number" id="dk-bondek-pjg" step="0.5" />
+            </div>
+            <div>
+              <label>Lebar Efektif Bondek (m)</label>
+              <input type="number" id="dk-bondek-lbr" step="0.05" />
+            </div>
+          </div>
+        </div>
+
+        <div id="dk-papan-wrap" style="display:none; margin-top: 8px;">
+          <div class="grid-2">
+            <div>
+              <label>Panjang Papan / lembar (m)</label>
+              <input type="number" id="dk-papan-pjg" step="0.5" />
+            </div>
+            <div>
+              <label>Lebar Papan (cm)</label>
+              <input type="number" id="dk-papan-lbr" step="1" />
+            </div>
+          </div>
+        </div>
+
+        <div class="hint-box" id="dk-alas-info">
+          <strong>Dasaran Cor:</strong> Pilih <strong>Bondek</strong>, <strong>Papan</strong>, atau <strong>Multiplex</strong> untuk menghitung kebutuhan lembar/batang alas cor beserta estimasi biayanya.
+        </div>
+      </div>
+
+      <div class="group-box">
+        <div class="group-header">C. Tulangan Besi / Wermes (12 m/Batang)</div>
+        <div class="grid-3">
+          <div>
+            <label>Diameter Besi (mm)</label>
+            <select id="dk-dia">
+              <option value="8">8 mm</option>
+              <option value="10" selected>10 mm</option>
+              <option value="12">12 mm</option>
+            </select>
+          </div>
+          <div>
+            <label>Jarak Besi / Wermes (cm)</label>
+            <input type="number" id="dk-spasi" step="1" />
+          </div>
+          <div>
+            <label>Lapis Tulangan</label>
+            <select id="dk-lapis">
+              <option value="1" selected>1 Lapis (Bawah)</option>
+              <option value="2">2 Lapis (Atas + Bawah)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="group-box">
+        <div class="group-header">D. Mutu Cor & Cadangan</div>
+        <div class="grid-2">
+          <div>
+            <label>Mutu Campuran</label>
+            <select id="dk-mutu">
+              <option value="k225" selected>K-225 (~8.2 sak/m³)</option>
+              <option value="k175">K-175 (~7.5 sak/m³)</option>
+              <option value="rabat">Rabat (~6 sak/m³)</option>
+            </select>
+          </div>
+          <div>
+            <label>Cadangan Potongan / Waste (%)</label>
+            <select id="dk-waste">
+              <option value="1.10" selected>10% (Standar)</option>
+              <option value="1.15">15% (Bentuk L / Potongan)</option>
+              <option value="1.05">5% (Minimal)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="price-box">
+        <div class="group-header">E. Input Harga Satuan Dak & Alas Cor (Rp)</div>
+        <div class="grid-2">
+          <div id="wrap-hrg-dk-alas" style="display:none;">
+            <label id="lbl-hrg-dk-alas">Alas Cor / lembar atau batang (Rp)</label>
+            <input type="number" id="hrg-dk-alas" step="1000" />
+          </div>
+          <div>
+            <label>Besi Dak / batang 12m (Rp)</label>
+            <input type="number" id="hrg-dk-besi" step="500" />
+          </div>
+          <div>
+            <div class="label-with-select">
+              <label for="hrg-dk-semen">Semen PC / sak (Rp)</label>
+              <select id="dk-semen-kg" class="select-mini" onchange="updatePlaceholderSemen('dk-semen-kg', 'hrg-dk-semen')">
+                <option value="40" selected>40 kg</option>
+                <option value="50">50 kg</option>
+              </select>
+            </div>
+            <input type="number" id="hrg-dk-semen" step="500" placeholder="Harga / sak 40 kg" />
+          </div>
+          <div>
+            <label>Pasir Beton / m³ (Rp)</label>
+            <input type="number" id="hrg-dk-pasir" step="5000" />
+          </div>
+          <div>
+            <label>Batu Split / m³ (Rp)</label>
+            <input type="number" id="hrg-dk-split" step="5000" />
+          </div>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button type="button" class="btn btn-primary" onclick="hitungDak()">Hitung Alas Cor, Besi, Cor & Biaya Dak</button>
+        <button type="button" class="btn-reset-main" onclick="resetPanel('dak')">Reset</button>
+      </div>
+      <div id="res-dak" class="result-box"></div>
+    </div>
+  </section>
+
+  <!-- TAB 5: BATU PONDASI -->
+  <section id="tab-pondasi" class="tab-panel">
+    <div class="card">
+      <div class="panel-topbar">
+        <button type="button" class="btn-back-home" onclick="goHome()">← Kembali ke Beranda</button>
+        <button type="button" class="btn-reset-panel" onclick="resetPanel('pondasi')">Reset</button>
+      </div>
+      <div class="section-title">5. Pondasi Batu Kali / Batu Belah</div>
+
+      <div class="group-box">
+        <div class="group-header">A. Ukuran Penampang & Panjang Jalur</div>
+        <div class="grid-2">
+          <div>
+            <label>Panjang Jalur Pondasi (m)</label>
+            <input type="number" id="pd-p" step="0.01" />
+          </div>
+          <div>
+            <label>Tinggi Pondasi (m)</label>
+            <input type="number" id="pd-t" step="0.01" />
+          </div>
+        </div>
+        <div class="grid-2" style="margin-top: 8px;">
+          <div>
+            <label>Lebar Atas (m)</label>
+            <input type="number" id="pd-la" step="0.01" />
+          </div>
+          <div>
+            <label>Lebar Bawah (m)</label>
+            <input type="number" id="pd-lb" step="0.01" />
+          </div>
+        </div>
+
+        <div id="pondasi-jalur-extra" class="bukaan-extra">
+          <div class="row-label">Tambahan Jalur / Sayap Pondasi (Bentuk L)</div>
+          <div class="grid-2">
+            <div>
+              <label>Panjang Jalur Tambahan (m)</label>
+              <input type="number" id="pd2-p" step="0.01" />
+            </div>
+            <div>
+              <label>Tinggi Jalur Tambahan (m)</label>
+              <input type="number" id="pd2-t" step="0.01" />
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 8px;">
+          <button type="button" class="btn-add-bukaan" onclick="bukaPondasiJalur(this)">+ Jalur Pondasi Tambahan (Bentuk L)</button>
+        </div>
+      </div>
+
+      <div class="group-box">
+        <div class="group-header">B. Campuran Adukan & Cadangan</div>
+        <div class="grid-2">
+          <div>
+            <label>Perbandingan Adukan</label>
+            <select id="pd-adukan">
+              <option value="1:4" selected>1 PC : 4 Pasir (~4.2 sak/m³)</option>
+              <option value="1:5">1 PC : 5 Pasir (~3.5 sak/m³)</option>
+            </select>
+          </div>
+          <div>
+            <label>Cadangan Batu / Waste (%)</label>
+            <select id="pd-waste">
+              <option value="1.15" selected>15% (Standar Lapangan)</option>
+              <option value="1.10">10% (Minimal)</option>
+              <option value="1.20">20% (Batu Tidak Seragam)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="price-box">
+        <div class="group-header">C. Input Harga Satuan Pondasi (Rp)</div>
+        <div class="grid-3">
+          <div>
+            <label>Batu Pondasi / m³ (Rp)</label>
+            <input type="number" id="hrg-pd-batu" step="5000" />
+          </div>
+          <div>
+            <div class="label-with-select">
+              <label for="hrg-pd-semen">Semen / sak (Rp)</label>
+              <select id="pd-semen-kg" class="select-mini" onchange="updatePlaceholderSemen('pd-semen-kg', 'hrg-pd-semen')">
+                <option value="40" selected>40 kg</option>
+                <option value="50">50 kg</option>
+              </select>
+            </div>
+            <input type="number" id="hrg-pd-semen" step="500" placeholder="Harga / sak 40 kg" />
+          </div>
+          <div>
+            <label>Pasir Pasang / m³ (Rp)</label>
+            <input type="number" id="hrg-pd-pasir" step="5000" />
+          </div>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button type="button" class="btn btn-primary" onclick="hitungPondasi()">Hitung Batu Pondasi, Semen, Pasir & Biaya</button>
+        <button type="button" class="btn-reset-main" onclick="resetPanel('pondasi')">Reset</button>
+      </div>
+      <div id="res-pondasi" class="result-box"></div>
+    </div>
+  </section>
+
+  <!-- TAB 6: TERALIS -->
+  <section id="tab-teralis" class="tab-panel">
+    <div class="card">
+      <div class="panel-topbar">
+        <button type="button" class="btn-back-home" onclick="goHome()">← Kembali ke Beranda</button>
+        <button type="button" class="btn-reset-panel" onclick="resetPanel('teralis')">Reset</button>
+      </div>
+      <div class="section-title">6. Perhitungan Teralis (Bingkai & Jeruji Besi)</div>
+
+      <div class="group-box">
+        <div class="group-header">A. Ukuran Bukaan yang Dipasang Teralis</div>
+
+        <div class="row-item">
+          <div class="row-label">Teralis Tipe 1 (Jendela Utama)</div>
+          <div class="grid-3">
+            <div>
+              <label>Jumlah (unit)</label>
+              <input type="number" id="tr1-jml" step="1" />
+            </div>
+            <div>
+              <label>Lebar (cm)</label>
+              <input type="number" id="tr1-l" step="1" />
+            </div>
+            <div>
+              <label>Tinggi (cm)</label>
+              <input type="number" id="tr1-t" step="1" />
+            </div>
+          </div>
+        </div>
+
+        <div class="row-item">
+          <div class="row-label">Teralis Tipe 2 (Jendela Kamar)</div>
+          <div class="grid-3">
+            <div>
+              <label>Jumlah (unit)</label>
+              <input type="number" id="tr2-jml" step="1" />
+            </div>
+            <div>
+              <label>Lebar (cm)</label>
+              <input type="number" id="tr2-l" step="1" />
+            </div>
+            <div>
+              <label>Tinggi (cm)</label>
+              <input type="number" id="tr2-t" step="1" />
+            </div>
+          </div>
+        </div>
+
+        <div class="row-item">
+          <div class="row-label">Teralis Tipe 3 (Boven / Ventilasi)</div>
+          <div class="grid-3">
+            <div>
+              <label>Jumlah (unit)</label>
+              <input type="number" id="tr3-jml" step="1" />
+            </div>
+            <div>
+              <label>Lebar (cm)</label>
+              <input type="number" id="tr3-l" step="1" />
+            </div>
+            <div>
+              <label>Tinggi (cm)</label>
+              <input type="number" id="tr3-t" step="1" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="group-box">
+        <div class="group-header">B. Model Jeruji & Ukuran Batang Besi</div>
+        <div class="grid-3">
+          <div>
+            <label>Jarak Jeruji (cm)</label>
+            <input type="number" id="tr-spasi" step="1" />
+          </div>
+          <div>
+            <label>Model Susunan Jeruji</label>
+            <select id="tr-model">
+              <option value="vertikal" selected>Jeruji Berdiri (Vertikal)</option>
+              <option value="horizontal">Jeruji Tidur (Horizontal)</option>
+              <option value="kotak">Silang Kotak (Vertikal + Horizontal)</option>
+            </select>
+          </div>
+          <div>
+            <label>Panjang Besi (m/btg)</label>
+            <input type="number" id="tr-pjg-btg" step="0.5" />
+          </div>
+        </div>
+
+        <div class="hint-box">
+          <strong>Rumus Teralis:</strong><br/>
+          • <strong>Besi Bingkai (Frame):</strong> Keliling <em>2 × (Lebar + Tinggi)</em> tiap unit.<br/>
+          • <strong>Besi Jeruji:</strong> Dihitung dari <em>(Lebar ÷ Jarak Spasi) - 1</em> dikalikan tinggi teralis (+10% sisa potongan).
+        </div>
+      </div>
+
+      <div class="price-box">
+        <div class="group-header">C. Input Harga Satuan Material Teralis (Rp)</div>
+        <div class="grid-3">
+          <div>
+            <label>Besi Bingkai / btg (Rp)</label>
+            <input type="number" id="hrg-tr-frame" step="1000" />
+          </div>
+          <div>
+            <label>Besi Jeruji / btg (Rp)</label>
+            <input type="number" id="hrg-tr-jeruji" step="1000" />
+          </div>
+          <div>
+            <label>Las & Cat / paket (Rp)</label>
+            <input type="number" id="hrg-tr-aks" step="1000" />
+          </div>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button type="button" class="btn btn-primary" onclick="hitungTeralis()">Hitung Kebutuhan Besi Teralis & Biaya</button>
+        <button type="button" class="btn-reset-main" onclick="resetPanel('teralis')">Reset</button>
+      </div>
+
+      <div id="res-teralis" class="result-box"></div>
+    </div>
+  </section>
+
+  <!-- TAB 7: LANTAI -->
+  <section id="tab-lantai" class="tab-panel">
+    <div class="card">
+      <div class="panel-topbar">
+        <button type="button" class="btn-back-home" onclick="goHome()">← Kembali ke Beranda</button>
+        <button type="button" class="btn-reset-panel" onclick="resetPanel('lantai')">Reset</button>
+      </div>
+      <div class="section-title">7. Keramik / Granit Lantai</div>
+
+      <div class="group-box">
+        <div class="group-header">A. Ruangan / Bidang Lantai</div>
+        <div class="grid-2">
+          <div>
+            <label>Panjang Ruangan 1 (m)</label>
+            <input type="number" id="l-p" step="0.1" />
+          </div>
+          <div>
+            <label>Lebar Ruangan 1 (m)</label>
+            <input type="number" id="l-l" step="0.1" />
+          </div>
+        </div>
+
+        <div id="lantai-extra-2" class="bukaan-extra">
+          <div class="row-label">Ruangan / Sayap 2</div>
+          <div class="grid-2">
+            <div>
+              <label>Panjang 2 (m)</label>
+              <input type="number" id="l2-p" step="0.1" />
+            </div>
+            <div>
+              <label>Lebar 2 (m)</label>
+              <input type="number" id="l2-l" step="0.1" />
+            </div>
+          </div>
+        </div>
+
+        <div id="lantai-extra-3" class="bukaan-extra">
+          <div class="row-label">Ruangan / Sayap 3</div>
+          <div class="grid-2">
+            <div>
+              <label>Panjang 3 (m)</label>
+              <input type="number" id="l3-p" step="0.1" />
+            </div>
+            <div>
+              <label>Lebar 3 (m)</label>
+              <input type="number" id="l3-l" step="0.1" />
+            </div>
+          </div>
+        </div>
+
+        <div class="add-bukaan-grid" style="grid-template-columns: 1fr 1fr;">
+          <button type="button" id="btn-lantai-2" class="btn-add-bukaan" onclick="bukaLantai(2, this)">+ Ruangan / Sayap 2</button>
+          <button type="button" id="btn-lantai-3" class="btn-add-bukaan" onclick="bukaLantai(3, this)">+ Ruangan / Sayap 3</button>
+        </div>
+      </div>
+
+      <div class="group-box">
+        <div class="group-header">B. Ukuran Dus & Cadangan</div>
+        <div class="grid-2">
+          <div>
+            <label>Luas per Dus (m²/dus)</label>
+            <select id="l-dus">
+              <option value="1.44">60x60 cm (1.44 m²/dus)</option>
+              <option value="1.00">50x50 cm (1.00 m²/dus)</option>
+              <option value="0.96">40x40 cm (0.96 m²/dus)</option>
+              <option value="0.99">30x30 cm (0.99 m²/dus)</option>
+            </select>
+          </div>
+          <div>
+            <label>Cadangan Potongan (%)</label>
+            <select id="l-waste">
+              <option value="1.05">5% (Ruang persegi)</option>
+              <option value="1.10" selected>10% (Banyak sudut/potongan)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="price-box">
+        <div class="group-header">C. Input Harga Satuan Lantai (Rp)</div>
+        <div class="grid-3">
+          <div>
+            <label>Keramik / dus (Rp)</label>
+            <input type="number" id="hrg-l-dus" step="1000" />
+          </div>
+          <div>
+            <div class="label-with-select">
+              <label for="hrg-l-semen">Semen / sak (Rp)</label>
+              <select id="l-semen-kg" class="select-mini" onchange="updatePlaceholderSemen('l-semen-kg', 'hrg-l-semen')">
+                <option value="40" selected>40 kg</option>
+                <option value="50">50 kg</option>
+              </select>
+            </div>
+            <input type="number" id="hrg-l-semen" step="500" placeholder="Harga / sak 40 kg" />
+          </div>
+          <div>
+            <label>Pasir / m³ (Rp)</label>
+            <input type="number" id="hrg-l-pasir" step="5000" />
+          </div>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button type="button" class="btn btn-primary" onclick="hitungLantai()">Hitung Kebutuhan & Biaya Lantai</button>
+        <button type="button" class="btn-reset-main" onclick="resetPanel('lantai')">Reset</button>
+      </div>
+
+      <div id="res-lantai" class="result-box"></div>
+    </div>
+  </section>
+
+  <!-- TAB 8: CAT -->
+  <section id="tab-cat" class="tab-panel">
+    <div class="card">
+      <div class="panel-topbar">
+        <button type="button" class="btn-back-home" onclick="goHome()">← Kembali ke Beranda</button>
+        <button type="button" class="btn-reset-panel" onclick="resetPanel('cat')">Reset</button>
+      </div>
+      <div class="section-title">8. Cat Dinding / Plafon</div>
+      <div class="grid-2">
+        <div class="field">
+          <label>Luas Bidang Cat (m²)</label>
+          <input type="number" id="c-luas" step="0.1" />
+        </div>
+        <div class="field">
+          <label>Jumlah Lapisan (lapis)</label>
+          <select id="c-lapis">
+            <option value="2">2 Lapis (Standar)</option>
+            <option value="3">3 Lapis (Warna kontras)</option>
+            <option value="1">1 Lapis (Cat dasar/sealer)</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label>Daya Sebar (m²/liter)</label>
+          <input type="number" id="c-sebar" step="0.5" />
+        </div>
+        <div class="field">
+          <label>Cat per Kaleng ~2.5L (Rp)</label>
+          <input type="number" id="hrg-c-galon" step="1000" />
+        </div>
+      </div>
+      <div class="action-row">
+        <button type="button" class="btn btn-primary" onclick="hitungCat()">Hitung Kebutuhan & Biaya Cat</button>
+        <button type="button" class="btn-reset-main" onclick="resetPanel('cat')">Reset</button>
+      </div>
+
+      <div id="res-cat" class="result-box"></div>
+    </div>
+  </section>
+
+  <!-- TAB 9: PLAFON -->
+  <section id="tab-plafon" class="tab-panel">
+    <div class="card">
+      <div class="panel-topbar">
+        <button type="button" class="btn-back-home" onclick="goHome()">← Kembali ke Beranda</button>
+        <button type="button" class="btn-reset-panel" onclick="resetPanel('plafon')">Reset</button>
+      </div>
+      <div class="section-title">9. Plafon, Rangka & List Profil</div>
+
+      <div class="group-box">
+        <div class="group-header">A. Dimensi Ruangan Plafon</div>
+        <div class="grid-2">
+          <div>
+            <label>Panjang Ruangan 1 (m)</label>
+            <input type="number" id="pl-p" step="0.01" />
+          </div>
+          <div>
+            <label>Lebar Ruangan 1 (m)</label>
+            <input type="number" id="pl-l" step="0.01" />
+          </div>
+        </div>
+
+        <div id="plafon-extra-2" class="bukaan-extra">
+          <div class="row-label">Ruangan / Sayap 2 (Bentuk L)</div>
+          <div class="grid-2">
+            <div>
+              <label>Panjang 2 (m)</label>
+              <input type="number" id="pl2-p" step="0.01" />
+            </div>
+            <div>
+              <label>Lebar 2 (m)</label>
+              <input type="number" id="pl2-l" step="0.01" />
+            </div>
+          </div>
+        </div>
+
+        <div id="plafon-extra-3" class="bukaan-extra">
+          <div class="row-label">Ruangan / Sayap 3</div>
+          <div class="grid-2">
+            <div>
+              <label>Panjang 3 (m)</label>
+              <input type="number" id="pl3-p" step="0.01" />
+            </div>
+            <div>
+              <label>Lebar 3 (m)</label>
+              <input type="number" id="pl3-l" step="0.01" />
+            </div>
+          </div>
+        </div>
+
+        <div class="add-bukaan-grid" style="grid-template-columns: 1fr 1fr;">
+          <button type="button" id="btn-plafon-2" class="btn-add-bukaan" onclick="bukaPlafon(2, this)">+ Ruangan / Sayap 2</button>
+          <button type="button" id="btn-plafon-3" class="btn-add-bukaan" onclick="bukaPlafon(3, this)">+ Ruangan / Sayap 3</button>
+        </div>
+      </div>
+
+      <div class="group-box">
+        <div class="group-header">B. Jenis Penutup, Rangka & Cadangan</div>
+        <div class="grid-2">
+          <div>
+            <label>Jenis Penutup Plafon</label>
+            <select id="pl-jenis" onchange="togglePlafonInfo()">
+              <option value="gypsum" selected>Gypsum (1,2×2,4 m = 2,88 m²)</option>
+              <option value="grc">GRC Board (1,2×2,4 m = 2,88 m²)</option>
+              <option value="pvc_3">PVC (Lebar 20 cm × Pjg 3 m)</option>
+              <option value="pvc_4">PVC (Lebar 20 cm × Pjg 4 m)</option>
+              <option value="pvc_6">PVC (Lebar 20 cm × Pjg 6 m)</option>
+            </select>
+          </div>
+          <div>
+            <label>Jenis Rangka (4 m/batang)</label>
+            <select id="pl-rangka" onchange="togglePlafonInfo()">
+              <option value="hollow" selected>Hollow Galvalum (modul 60×60 cm)</option>
+              <option value="kayu">Kaso Kayu (modul 60×60 cm)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-top: 8px;">
+          <div>
+            <label>Cadangan Potongan / Waste (%)</label>
+            <select id="pl-waste">
+              <option value="1.10" selected>10% (Standar Potongan)</option>
+              <option value="1.05">5% (Ruang Persegi)</option>
+              <option value="1.15">15% (Banyak Sudut/Lampu)</option>
+            </select>
+          </div>
+          <div>
+            <label>Panjang List Profil / Batang (m)</label>
+            <select id="pl-list-pjg">
+              <option value="4" selected>4 meter</option>
+              <option value="3">3 meter</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="hint-box" id="pl-info-box">
+          <strong>Mekanisme Plafon:</strong> Luas ruangan (+waste) dibagi luas lembar/batang penutup. Rangka utama & pembagi dihitung dengan modul ±60 cm ditambah list pinggir keliling ruangan.
+        </div>
+      </div>
+
+      <div class="price-box">
+        <div class="group-header">C. Input Harga Satuan Plafon & Jasa (Rp)</div>
+        <div class="grid-2">
+          <div>
+            <label id="lbl-hrg-pl-penutup">Gypsum / lembar (Rp)</label>
+            <input type="number" id="hrg-pl-penutup" step="500" />
+          </div>
+          <div>
+            <label id="lbl-hrg-pl-rangka">Hollow / batang 4m (Rp)</label>
+            <input type="number" id="hrg-pl-rangka" step="500" />
+          </div>
+          <div>
+            <label>List Pinggir / batang (Rp)</label>
+            <input type="number" id="hrg-pl-list" step="500" />
+          </div>
+          <div>
+            <label>Upah Pasang / m² (Rp)</label>
+            <input type="number" id="hrg-pl-jasa" step="1000" />
+          </div>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button type="button" class="btn btn-primary" onclick="hitungPlafon()">Hitung Kebutuhan & Biaya Plafon</button>
+        <button type="button" class="btn-reset-main" onclick="resetPanel('plafon')">Reset</button>
+      </div>
+
+      <div id="res-plafon" class="result-box"></div>
+    </div>
+  </section>
+
+  <script>
+    const PANJANG_BESI_BATANG = 12;
+    const savedHargaBesi = {};
+    const rekapProyek = {};
+
+    const NAMA_MODUL = {
+      dinding: '1. Dinding, Plester & Acian',
+      beton: '2. Besi & Cor Beton',
+      atap: '3. Rangka, Atap & Wuwung',
+      dak: '4. Plat Dak Beton & Alas Cor',
+      pondasi: '5. Pondasi Batu Kali',
+      teralis: '6. Teralis Besi',
+      lantai: '7. Keramik / Granit Lantai',
+      cat: '8. Cat Dinding / Plafon',
+      plafon: '9. Plafon, Rangka & List'
+    };
+
+    const URUTAN_MODUL = ['dinding', 'beton', 'atap', 'dak', 'pondasi', 'teralis', 'lantai', 'cat', 'plafon'];
+
+    function val(id) {
+      const el = document.getElementById(id);
+      if (!el) return 0;
+      const num = parseFloat(el.value);
+      return Number.isFinite(num) ? num : 0;
+    }
+
+    function rp(angka) {
+      return 'Rp ' + Math.round(angka).toLocaleString('id-ID');
+    }
+
+    function getFaktorSakSemen(idSelect) {
+      const sel = document.getElementById(idSelect);
+      const kg = sel ? parseInt(sel.value, 10) : 40;
+      return { kg, faktor: 40 / (kg === 50 ? 50 : 40) };
+    }
+
+    function updatePlaceholderSemen(idSelect, idInput) {
+      const { kg } = getFaktorSakSemen(idSelect);
+      const inp = document.getElementById(idInput);
+      if (inp) inp.placeholder = `Harga / sak ${kg} kg`;
+    }
+
+    function updateRekapUI() {
+      const keys = URUTAN_MODUL.filter(k => Boolean(rekapProyek[k]));
+      const banner = document.getElementById('rekap-banner');
+      const bannerTitle = document.getElementById('rekap-banner-title');
+      const bannerTotal = document.getElementById('rekap-banner-total');
+
+      URUTAN_MODUL.forEach(k => {
+        const tile = document.getElementById('tile-' + k);
+        if (tile) {
+          if (rekapProyek[k]) {
+            tile.classList.add('has-data');
+          } else {
+            tile.classList.remove('has-data');
+          }
+        }
+      });
+
+      if (keys.length === 0) {
+        banner.classList.add('hidden');
+      } else {
+        const grandTotal = keys.reduce((acc, k) => acc + (rekapProyek[k].totalBiaya || 0), 0);
+        bannerTitle.textContent = `${keys.length} Pekerjaan Siap Dicetak Gabungan`;
+        bannerTotal.textContent = `Total Sementara: ${rp(grandTotal)}`;
+        banner.classList.remove('hidden');
+      }
+    }
+
+    function goHome() {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.menu-tile').forEach(b => b.classList.remove('active'));
+      const grid = document.querySelector('.home-menu-grid');
+      const footer = document.querySelector('.home-footer');
+      if (grid) grid.classList.remove('hidden');
+      if (footer) footer.classList.remove('hidden');
+      updateRekapUI();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function switchTab(name, btn) {
+      const grid = document.querySelector('.home-menu-grid');
+      const footer = document.querySelector('.home-footer');
+      const banner = document.getElementById('rekap-banner');
+      if (grid) grid.classList.add('hidden');
+      if (footer) footer.classList.add('hidden');
+      if (banner) banner.classList.add('hidden');
+
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.menu-tile').forEach(b => b.classList.remove('active'));
+
+      const target = document.getElementById('tab-' + name);
+      if (target) target.classList.add('active');
+      if (btn) btn.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openRekapPanel() {
+      switchTab('rekap', null);
+      renderRekapGabungan();
+    }
+
+    function hapusSemuaRekap() {
+      URUTAN_MODUL.forEach(k => {
+        delete rekapProyek[k];
+      });
+      updateRekapUI();
+      renderRekapGabungan();
+    }
+
+    function togglePilihRekap(key, checkbox) {
+      if (rekapProyek[key]) {
+        rekapProyek[key].checked = checkbox.checked;
+        renderRekapGabungan();
+      }
+    }
+
+    function renderRekapGabungan() {
+      const filterList = document.getElementById('rekap-filter-list');
+      const printArea = document.getElementById('rekap-print-area');
+      const keys = URUTAN_MODUL.filter(k => Boolean(rekapProyek[k]));
+
+      if (keys.length === 0) {
+        filterList.innerHTML = '<span style="font-size:12px; color:#64748b;">Belum ada hasil perhitungan yang tersimpan.</span>';
+        printArea.innerHTML = `
+          <div class="rekap-empty">
+            Belum ada data perhitungan. Silakan hitung minimal satu menu pekerjaan terlebih dahulu, lalu kembali ke sini untuk mencetak sekaligus.
+          </div>
+        `;
+        return;
+      }
+
+      filterList.innerHTML = keys.map(k => {
+        const item = rekapProyek[k];
+        return `
+          <label class="rekap-chip ${item.checked ? 'checked' : ''}">
+            <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="togglePilihRekap('${k}', this)" />
+            <span>${NAMA_MODUL[k]}</span>
+          </label>
+        `;
+      }).join('');
+
+      const selectedKeys = keys.filter(k => rekapProyek[k].checked);
+      if (selectedKeys.length === 0) {
+        printArea.innerHTML = `
+          <div class="rekap-empty">
+            Centang minimal satu pekerjaan di atas untuk menampilkan dan mencetak rekap gabungan.
+          </div>
+        `;
+        return;
+      }
+
+      const tglCetak = new Date().toLocaleDateString('id-ID', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      });
+
+      let grandTotal = 0;
+      const copyAllLines = [`REKAP GABUNGAN RAB BANGUNAN (${tglCetak})`, `========================================`];
+
+      const sectionsHtml = selectedKeys.map(k => {
+        const item = rekapProyek[k];
+        grandTotal += item.totalBiaya || 0;
+
+        copyAllLines.push(`\n[${NAMA_MODUL[k]}]`);
+        const rowsHtml = item.rows.map(r => {
+          if (r.divider) return `<div class="result-divider"></div>`;
+          const plainVal = r.value.replace(/<br\/?>/g, ' | ').replace(/<[^>]+>/g, '');
+          copyAllLines.push(`- ${r.label}: ${plainVal}`);
+          return `
+            <div class="result-item">
+              <span>${r.label}</span>
+              <strong>${r.value}</strong>
+            </div>
+          `;
+        }).join('');
+
+        copyAllLines.push(`Subtotal ${NAMA_MODUL[k]}: ${rp(item.totalBiaya)}`);
+
+        return `
+          <div class="rekap-section-block">
+            <div class="rekap-section-head">
+              <span>${NAMA_MODUL[k]}</span>
+              <span>${rp(item.totalBiaya)}</span>
+            </div>
+            ${rowsHtml}
+            <div class="rekap-subtotal-row">
+              <span>Subtotal Pekerjaan</span>
+              <span>${rp(item.totalBiaya)}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      copyAllLines.push(`\n========================================`);
+      copyAllLines.push(`GRAND TOTAL ESTIMASI BIAYA: ${rp(grandTotal)}`);
+      const encodedCopyText = encodeURIComponent(copyAllLines.join('\n'));
+
+      printArea.innerHTML = `
+        <div class="pdf-header-print">
+          <h2>REKAP GABUNGAN ESTIMASI BIAYA & MATERIAL BANGUNAN</h2>
+          <p>Disusun dengan Kalkulator RAB • abee azka | Tanggal: ${tglCetak}</p>
+        </div>
+        ${sectionsHtml}
+        <div class="result-total">
+          <span>GRAND TOTAL (${selectedKeys.length} PEKERJAAN)</span>
+          <span>${rp(grandTotal)}</span>
+        </div>
+        <div class="note">*Rekap gabungan otomatis dari menu pekerjaan yang dicentang.</div>
+        <button type="button" class="btn btn-copy" onclick="copyEncodedText(this, '${encodedCopyText}')">Salin Semua Rincian Gabungan</button>
+        <button type="button" class="btn btn-pdf" onclick="downloadPDF()">Download / Print PDF Gabungan</button>
+      `;
+    }
+
+    function resetPanel(name) {
+      const panel = document.getElementById('tab-' + name);
+      if (!panel) return;
+
+      panel.querySelectorAll('input').forEach(inp => {
+        inp.value = '';
+      });
+
+      panel.querySelectorAll('select').forEach(sel => {
+        const def = sel.querySelector('option[selected]');
+        sel.selectedIndex = def ? Array.from(sel.options).indexOf(def) : 0;
+      });
+
+      panel.querySelectorAll('.bukaan-extra.show').forEach(ex => ex.classList.remove('show'));
+      panel.querySelectorAll('.btn-add-bukaan.opened').forEach(btn => btn.classList.remove('opened'));
+
+      const resBox = panel.querySelector('.result-box');
+      if (resBox) {
+        resBox.innerHTML = '';
+        resBox.classList.remove('show');
+      }
+
+      delete rekapProyek[name];
+      updateRekapUI();
+
+      if (name === 'dinding') {
+        toggleNatField();
+        updatePlaceholderSemen('d-semen-kg', 'hrg-d-semen');
+      }
+      if (name === 'beton') {
+        syncHargaBesiFields();
+        updatePlaceholderSemen('b-semen-kg', 'hrg-b-semen');
+      }
+      if (name === 'atap') {
+        toggleModelAtap();
+        toggleRangkaAtap();
+        updateEfektifAtap();
+      }
+      if (name === 'dak') {
+        toggleAlasDak();
+        updatePlaceholderSemen('dk-semen-kg', 'hrg-dk-semen');
+      }
+      if (name === 'pondasi') {
+        updatePlaceholderSemen('pd-semen-kg', 'hrg-pd-semen');
+      }
+      if (name === 'lantai') {
+        updatePlaceholderSemen('l-semen-kg', 'hrg-l-semen');
+      }
+      if (name === 'plafon') {
+        togglePlafonInfo();
+      }
+    }
+
+    function bukaBukaan(jenis, no, btn) {
+      const box = document.getElementById(`${jenis}-extra-${no}`);
+      if (box) box.classList.add('show');
+      if (btn) btn.classList.add('opened');
+    }
+
+    function bukaDindingL(btn) {
+      const box = document.getElementById('dinding-l-extra');
+      if (box) box.classList.add('show');
+      if (btn) btn.classList.add('opened');
+    }
+
+    function bukaRingTul2(btn) {
+      const box = document.getElementById('ring-tul-extra-2');
+      if (box) box.classList.add('show');
+      if (btn) btn.classList.add('opened');
+    }
+
+    function bukaAtapSayapL(btn) {
+      const box = document.getElementById('atap-sayap-l-extra');
+      if (box) box.classList.add('show');
+      if (btn) btn.classList.add('opened');
+    }
+
+    function bukaDakSayap(btn) {
+      const box = document.getElementById('dak-sayap-extra');
+      if (box) box.classList.add('show');
+      if (btn) btn.classList.add('opened');
+    }
+
+    function bukaPondasiJalur(btn) {
+      const box = document.getElementById('pondasi-jalur-extra');
+      if (box) box.classList.add('show');
+      if (btn) btn.classList.add('opened');
+    }
+
+    function bukaLantai(no, btn) {
+      const box = document.getElementById(`lantai-extra-${no}`);
+      if (box) box.classList.add('show');
+      if (btn) btn.classList.add('opened');
+    }
+
+    function bukaPlafon(no, btn) {
+      const box = document.getElementById(`plafon-extra-${no}`);
+      if (box) box.classList.add('show');
+      if (btn) btn.classList.add('opened');
+    }
+
+    function togglePlafonInfo() {
+      const jenis = document.getElementById('pl-jenis').value;
+      const rangka = document.getElementById('pl-rangka').value;
+      const lblPenutup = document.getElementById('lbl-hrg-pl-penutup');
+      const lblRangka = document.getElementById('lbl-hrg-pl-rangka');
+      const info = document.getElementById('pl-info-box');
+
+      if (jenis === 'gypsum') {
+        lblPenutup.textContent = 'Gypsum / lembar (Rp)';
+      } else if (jenis === 'grc') {
+        lblPenutup.textContent = 'GRC Board / lembar (Rp)';
+      } else if (jenis === 'pvc_3') {
+        lblPenutup.textContent = 'PVC 3m / batang (Rp)';
+      } else if (jenis === 'pvc_4') {
+        lblPenutup.textContent = 'PVC 4m / batang (Rp)';
+      } else {
+        lblPenutup.textContent = 'PVC 6m / batang (Rp)';
+      }
+
+      lblRangka.textContent = rangka === 'hollow' ? 'Hollow / batang 4m (Rp)' : 'Kaso Kayu / batang 4m (Rp)';
+
+      const ketPenutup = (jenis === 'gypsum' || jenis === 'grc')
+        ? '1 lembar = 1,2 m × 2,4 m (2,88 m²), dilengkapi sekrup & compound sambungan.'
+        : 'PVC lebar efektif 20 cm (0,20 m) per batang, dipasang berjajar sesuai luas area.';
+
+      const ketRangka = rangka === 'hollow'
+        ? 'Rangka hollow modul ±60 cm + gantungan (~1,1 batang 4m/m²).'
+        : 'Rangka kaso kayu modul ±60 cm + penggantung (~1,1 batang 4m/m²).';
+
+      info.innerHTML = `<strong>Mekanisme Plafon:</strong> ${ketPenutup} ${ketRangka}`;
+    }
+
+    function toggleAlasDak() {
+      const alas = document.getElementById('dk-alas').value;
+      const bondekWrap = document.getElementById('dk-bondek-wrap');
+      const papanWrap = document.getElementById('dk-papan-wrap');
+      const tebalWrap = document.getElementById('dk-alas-tebal-wrap');
+      const wrapHrg = document.getElementById('wrap-hrg-dk-alas');
+      const lblHrg = document.getElementById('lbl-hrg-dk-alas');
+      const info = document.getElementById('dk-alas-info');
+
+      bondekWrap.style.display = alas === 'bondek' ? 'block' : 'none';
+      papanWrap.style.display = alas === 'papan' ? 'block' : 'none';
+      tebalWrap.style.display = alas === 'multiplex' ? 'block' : 'none';
+      wrapHrg.style.display = alas === 'tanpa' ? 'none' : 'block';
+
+      if (alas === 'bondek') {
+        lblHrg.textContent = 'Bondek / lembar (Rp)';
+        info.innerHTML = '<strong>Bondek:</strong> Default panjang 6 m & lebar efektif 1,00 m per lembar (bisa disesuaikan).';
+      } else if (alas === 'papan') {
+        lblHrg.textContent = 'Papan Bekisting / lembar atau batang (Rp)';
+        info.innerHTML = '<strong>Papan Bekisting:</strong> Default panjang 4 m & lebar 20 cm (0,20 m) per lembar.';
+      } else if (alas === 'multiplex') {
+        lblHrg.textContent = 'Multiplex / lembar (Rp)';
+        info.innerHTML = '<strong>Multiplex:</strong> Ukuran standar 1,22 m × 2,44 m (~2,9768 m² per lembar).';
+      } else {
+        info.innerHTML = '<strong>Dasaran Cor:</strong> Pilih <strong>Bondek</strong>, <strong>Papan</strong>, atau <strong>Multiplex</strong> untuk menghitung kebutuhan lembar/batang alas cor beserta estimasi biayanya.';
+      }
+    }
+
+    function toggleNatField() {
+      const jenis = document.getElementById('d-jenis').value;
+      const natWrap = document.getElementById('nat-wrap');
+      const info = document.getElementById('info-aturan');
+
+      const wrapBata = document.getElementById('wrap-harga-bata');
+      const wrapHebel = document.getElementById('wrap-harga-hebel');
+      const wrapMortar = document.getElementById('wrap-harga-mortar');
+
+      if (jenis === 'merah') {
+        natWrap.style.display = 'block';
+        wrapBata.style.display = 'block';
+        wrapHebel.style.display = 'none';
+        wrapMortar.style.display = 'none';
+
+        const natCm = val('d-nat') || 2;
+        const pEf = 0.20 + (natCm / 100);
+        const tEf = 0.05 + (natCm / 100);
+        const koef = (1 / (pEf * tEf)).toFixed(2);
+        info.innerHTML = `<strong>Bata Merah (20×10×5 cm):</strong> Nat ${natCm} cm → ukuran efektif ${pEf.toFixed(2)} m × ${tEf.toFixed(2)} m (~${koef} buah/m²).`;
+      } else {
+        natWrap.style.display = 'none';
+        wrapBata.style.display = 'none';
+        wrapHebel.style.display = 'block';
+        wrapMortar.style.display = 'block';
+
+        info.innerHTML = `<strong>Hebel (60×20×7,5 cm):</strong> Perekat hanya merekatkan tanpa mengurangi jumlah blok → luas per blok 0,60 m × 0,20 m = 0,12 m² (~8,33 buah/m²).`;
+      }
+    }
+
+    document.getElementById('d-nat').addEventListener('input', toggleNatField);
+
+    function toggleModelAtap() {
+      const model = document.getElementById('a-model').value;
+      const jureanBox = document.getElementById('jurean-extra-box');
+      const bedenganBox = document.getElementById('bedengan-extra-box');
+
+      if (model === 'jurean') {
+        jureanBox.style.display = 'block';
+        bedenganBox.style.display = 'none';
+      } else {
+        jureanBox.style.display = 'none';
+        bedenganBox.style.display = 'block';
+      }
+    }
+
+    function toggleRangkaAtap() {
+      const rangka = document.getElementById('a-rangka').value;
+      const kayuBox = document.getElementById('rangka-kayu-box');
+      const brBox = document.getElementById('rangka-bajaringan-box');
+      const hrgKayu = document.getElementById('harga-kayu-inputs');
+      const hrgBr = document.getElementById('harga-br-inputs');
+
+      if (rangka === 'kayu') {
+        kayuBox.style.display = 'block';
+        brBox.style.display = 'none';
+        hrgKayu.style.display = 'grid';
+        hrgBr.style.display = 'none';
+      } else {
+        kayuBox.style.display = 'none';
+        brBox.style.display = 'block';
+        hrgKayu.style.display = 'none';
+        hrgBr.style.display = 'grid';
+      }
+    }
+
+    function updateEfektifAtap() {
+      const jenisAtap = document.getElementById('a-jenis-atap').value;
+      const wuwungInp = document.getElementById('a-wuwung-efektif');
+
+      if (jenisAtap === '0.11') {
+        wuwungInp.value = '0.25';
+      } else if (jenisAtap === '0.76') {
+        wuwungInp.value = '0.75';
+      } else {
+        wuwungInp.value = '0.33';
+      }
+    }
+
+    function syncHargaBesiFields() {
+      document.querySelectorAll('[data-dia-harga]').forEach(inp => {
+        savedHargaBesi[inp.dataset.diaHarga] = inp.value;
+      });
+
+      const unikDia = [...new Set([
+        document.getElementById('bt-dia').value,
+        document.getElementById('rg-tul-dia').value,
+        document.getElementById('rg-tul2-dia').value,
+        document.getElementById('tk-dia').value,
+        document.getElementById('rg-tk-dia').value
+      ])].sort((a, b) => Number(a) - Number(b));
+
+      document.getElementById('harga-besi-container').innerHTML = unikDia.map(dia => `
+        <div>
+          <label>Besi ${dia} mm / batang (Rp)</label>
+          <input type="number" id="hrg-besi-${dia}" data-dia-harga="${dia}"
+                 value="${savedHargaBesi[dia] || ''}" step="500" />
+        </div>
+      `).join('');
+    }
+
+    syncHargaBesiFields();
+
+    function renderResult(modulKey, boxId, title, rows, totalBiaya, note) {
+      rekapProyek[modulKey] = {
+        title,
+        rows,
+        totalBiaya,
+        checked: true
+      };
+      updateRekapUI();
+
+      const box = document.getElementById(boxId);
+      const tglCetak = new Date().toLocaleDateString('id-ID', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      });
+
+      let html = `
+        <div class="pdf-header-print">
+          <h2>${title}</h2>
+          <p>Disusun dengan Kalkulator RAB • abee azka | Tanggal: ${tglCetak}</p>
+        </div>
+      `;
+
+      html += rows.map(r => {
+        if (r.divider) return `<div class="result-divider"></div>`;
+        return `
+          <div class="result-item">
+            <span>${r.label}</span>
+            <strong>${r.value}</strong>
+          </div>
+        `;
+      }).join('');
+
+      if (totalBiaya > 0) {
+        html += `
+          <div class="result-total">
+            <span>ESTIMASI TOTAL BIAYA</span>
+            <span>${rp(totalBiaya)}</span>
+          </div>
+        `;
+      }
+
+      const copyLines = rows
+        .filter(r => !r.divider)
+        .map(r => `- ${r.label}: ${r.value.replace(/<br\/?>/g, ' | ').replace(/<[^>]+>/g, '')}`);
+      if (totalBiaya > 0) {
+        copyLines.push(`---------------------------`);
+        copyLines.push(`TOTAL ESTIMASI BIAYA: ${rp(totalBiaya)}`);
+      }
+      const encodedCopyText = encodeURIComponent([title, ...copyLines].join('\n'));
+
+      html += `<div class="note">${note}</div>`;
+      html += `<button type="button" class="btn btn-copy" onclick="copyEncodedText(this, '${encodedCopyText}')">Salin Hasil & Rincian Biaya</button>`;
+      html += `<button type="button" class="btn btn-pdf" onclick="downloadPDF()">Download PDF</button>`;
+      html += `<button type="button" class="btn btn-rekap-shortcut" onclick="openRekapPanel()">Lihat Rekap & Cetak Semua Pekerjaan</button>`;
+
+      box.innerHTML = html;
+      box.classList.add('show');
+    }
+
+    function downloadPDF() {
+      window.print();
+    }
+
+    function copyEncodedText(btn, encodedText) {
+      const text = decodeURIComponent(encodedText);
+      navigator.clipboard.writeText(text).then(() => {
+        const ori = btn.textContent;
+        btn.textContent = 'Tersalin ke Clipboard!';
+        setTimeout(() => btn.textContent = ori, 1800);
+      });
+    }
+
+    function hitungDinding() {
+      const bangP = Math.max(0, val('d-bang-p'));
+      const bangL = Math.max(0, val('d-bang-l'));
+      const bangT = Math.max(0, val('d-bang-t'));
+      const luasUtama = 2 * (bangP + bangL) * bangT;
+
+      const luasSayapL = 2 * (Math.max(0, val('d-l2-p')) + Math.max(0, val('d-l2-l'))) * Math.max(0, val('d-l2-t'));
+      const luasLiong = Math.max(0, val('d-liong-p')) * Math.max(0, val('d-liong-t'));
+      const luasLuar = Math.max(0, luasUtama + luasSayapL - luasLiong);
+
+      const luasSekat1 = Math.max(0, val('d-sek1-p')) * Math.max(0, val('d-sek1-t'));
+      const luasSekat2 = Math.max(0, val('d-sek2-p')) * Math.max(0, val('d-sek2-t'));
+      const luasSekat3 = Math.max(0, val('d-sek3-p')) * Math.max(0, val('d-sek3-t'));
+      const totalLuasSekat = luasSekat1 + luasSekat2 + luasSekat3;
+
+      const totalDindingKotor = luasLuar + totalLuasSekat;
+      if (totalDindingKotor <= 0) {
+        return alert('Masukkan ukuran panjang, lebar, dan tinggi bangunan terlebih dahulu.');
+      }
+
+      const luasPintu = [1, 2, 3, 4].reduce((sum, n) => {
+        return sum + (Math.max(0, val(`p${n}-jml`)) * Math.max(0, val(`p${n}-l`)) * Math.max(0, val(`p${n}-t`)));
+      }, 0);
+
+      const luasJendela = [1, 2, 3, 4].reduce((sum, n) => {
+        return sum + (Math.max(0, val(`j${n}-jml`)) * Math.max(0, val(`j${n}-l`)) * Math.max(0, val(`j${n}-t`)));
+      }, 0);
+
+      const totalBukaan = luasPintu + luasJendela;
+
+      if (totalBukaan >= totalDindingKotor) {
+        return alert(
+          `Total luas pintu & jendela (${totalBukaan.toFixed(2)} m²) melebihi atau sama dengan luas dinding kotor (${totalDindingKotor.toFixed(2)} m²). Periksa kembali input pintu/jendela.`
+        );
+      }
+
+      const luasBersih = totalDindingKotor - totalBukaan;
+      const jenis = document.getElementById('d-jenis').value;
+      const sisi = parseInt(document.getElementById('d-sisi').value, 10);
+
+      let namaBata = '', jmlBata = 0, koefBata = 0, semenPasang = 0, pasirPasang = 0, mortarHebel = 0;
+
+      if (jenis === 'merah') {
+        namaBata = 'Bata Merah (20×10×5 cm)';
+        const natMeter = Math.max(0, val('d-nat') || 2) / 100;
+        const pEfektif = 0.20 + natMeter;
+        const tEfektif = 0.05 + natMeter;
+        const luasPerBata = pEfektif * tEfektif;
+
+        koefBata = 1 / luasPerBata;
+        jmlBata = Math.ceil(luasBersih * koefBata);
+
+        const luasBataBersihPerM2 = koefBata * (0.20 * 0.05);
+        const volNatPerM2 = Math.max(0.015, (1 - luasBataBersihPerM2) * 0.10);
+        pasirPasang = luasBersih * volNatPerM2 * 1.15;
+        semenPasang = pasirPasang * 5.5;
+      } else {
+        namaBata = 'Hebel (60×20×7,5 cm)';
+        const luasPerHebel = 0.60 * 0.20;
+        koefBata = 1 / luasPerHebel;
+        jmlBata = Math.ceil(luasBersih * koefBata);
+        mortarHebel = Math.ceil(luasBersih / 11);
+      }
+
+      const luasPlester = luasBersih * sisi;
+      const semenPlester = luasPlester * 0.16;
+      const pasirPlester = luasPlester * 0.025;
+      const semenAcian = luasPlester * 0.09;
+
+      const { kg: sakKg, faktor: faktorSak } = getFaktorSakSemen('d-semen-kg');
+      const totalSemenSak = Math.ceil((semenPasang + semenPlester + semenAcian) * faktorSak);
+      const totalPasirM3 = parseFloat((pasirPasang + pasirPlester).toFixed(2));
+
+      const biayaBata = jmlBata * Math.max(0, jenis === 'merah' ? val('hrg-bata-merah') : val('hrg-hebel'));
+      const biayaMortar = mortarHebel * Math.max(0, jenis === 'hebel' ? val('hrg-mortar') : 0);
+      const biayaSemen = totalSemenSak * Math.max(0, val('hrg-d-semen'));
+      const biayaPasir = totalPasirM3 * Math.max(0, val('hrg-d-pasir'));
+      const totalBiaya = biayaBata + biayaMortar + biayaSemen + biayaPasir;
+
+      const rows = [
+        { label: 'Luas Dinding Luar (setelah L/liong)', value: `${luasLuar.toFixed(2)} m²` },
+        { label: 'Luas Dinding Sekat (1-3)', value: `${totalLuasSekat.toFixed(2)} m²` },
+        { label: 'Luas Pintu & Jendela', value: `- ${totalBukaan.toFixed(2)} m²` },
+        { label: 'Luas Dinding Bersih', value: `${luasBersih.toFixed(2)} m²` },
+        { divider: true },
+        {
+          label: `${namaBata} (${koefBata.toFixed(1)}/m²)`,
+          value: `${jmlBata.toLocaleString('id-ID')} biji` + `<span class="sub-price">${rp(biayaBata)}</span>`
+        }
+      ];
+
+      if (jenis === 'hebel') {
+        rows.push({
+          label: 'Perekat Hebel (40 kg)',
+          value: `${mortarHebel} sak` + `<span class="sub-price">${rp(biayaMortar)}</span>`
+        });
+      }
+
+      rows.push(
+        {
+          label: `Semen PC (${sakKg} kg)`,
+          value: `${totalSemenSak} sak` + `<span class="sub-price">${rp(biayaSemen)}</span>`
+        },
+        {
+          label: 'Pasir Pasang & Plester',
+          value: `${totalPasirM3.toFixed(2)} m³` + `<span class="sub-price">${rp(biayaPasir)}</span>`
+        }
+      );
+
+      renderResult(
+        'dinding',
+        'res-dinding',
+        'ESTIMASI MATERIAL & BIAYA DINDING',
+        rows,
+        totalBiaya,
+        '*Rincian kebutuhan material dan subtotal biaya per item dihitung otomatis dari luas dinding bersih.'
+      );
+    }
+
+    function hitungBeton() {
+      const waste = parseFloat(document.getElementById('b-waste').value) || 1.10;
+      const mutu = document.getElementById('b-mutu').value;
+
+      const btP = Math.max(0, val('bt-p'));
+      const btL = Math.max(0, val('bt-l'));
+      const btIsi = Math.max(0, Math.round(val('bt-isi')));
+      const btDia = document.getElementById('bt-dia').value;
+      const btSusun = parseInt(document.getElementById('bt-susun').value, 10) || 1;
+      const btSekat = Math.max(0, val('bt-sekat'));
+
+      const kelilingLuar = 2 * (btP + btL);
+      const totalPanjangJalur = (kelilingLuar + btSekat) * btSusun;
+      const totalMeterTulanganMendatar = totalPanjangJalur * btIsi * waste;
+
+      const rgTulPcm = Math.max(0, val('rg-tul-p'));
+      const rgTulLcm = Math.max(0, val('rg-tul-l'));
+      const rgTulJarakCm = Math.max(5, val('rg-tul-jarak') || 15);
+      const rgTulDia = document.getElementById('rg-tul-dia').value;
+
+      const kelilingRingTul = (rgTulPcm > 0 && rgTulLcm > 0) ? (2 * ((rgTulPcm / 100) + (rgTulLcm / 100)) + 0.08) : 0;
+      const totalPcsRingTul = (totalPanjangJalur > 0 && kelilingRingTul > 0) ? Math.ceil(totalPanjangJalur / (rgTulJarakCm / 100)) + 1 : 0;
+      const totalMeterRingTul = totalPcsRingTul * kelilingRingTul * waste;
+
+      const rgTul2Pcm = Math.max(0, val('rg-tul2-p'));
+      const rgTul2Lcm = Math.max(0, val('rg-tul2-l'));
+      const rgTul2JarakCm = Math.max(5, val('rg-tul2-jarak') || 15);
+      const rgTul2Dia = document.getElementById('rg-tul2-dia').value;
+
+      const kelilingRingTul2 = (rgTul2Pcm > 0 && rgTul2Lcm > 0) ? (2 * ((rgTul2Pcm / 100) + (rgTul2Lcm / 100)) + 0.08) : 0;
+      const totalPcsRingTul2 = (totalPanjangJalur > 0 && kelilingRingTul2 > 0) ? Math.ceil(totalPanjangJalur / (rgTul2JarakCm / 100)) + 1 : 0;
+      const totalMeterRingTul2 = totalPcsRingTul2 * kelilingRingTul2 * waste;
+
+      const tkP = Math.max(0, val('tk-p'));
+      const tkIsi = Math.max(0, Math.round(val('tk-isi')));
+      const tkJml = Math.max(0, Math.round(val('tk-jml')));
+      const tkDia = document.getElementById('tk-dia').value;
+
+      const totalPanjangTiang = tkP * tkJml;
+      const totalMeterTulanganTiang = totalPanjangTiang * tkIsi * waste;
+
+      const rgTkPcm = Math.max(0, val('rg-tk-p'));
+      const rgTkLcm = Math.max(0, val('rg-tk-l'));
+      const rgTkJarakCm = Math.max(5, val('rg-tk-jarak') || 15);
+      const rgTkDia = document.getElementById('rg-tk-dia').value;
+
+      const kelilingRingTk = (rgTkPcm > 0 && rgTkLcm > 0) ? (2 * ((rgTkPcm / 100) + (rgTkLcm / 100)) + 0.08) : 0;
+      const totalPcsRingTk = (tkP > 0 && tkJml > 0 && kelilingRingTk > 0) ? (Math.ceil(tkP / (rgTkJarakCm / 100)) + 1) * tkJml : 0;
+      const totalMeterRingTk = totalPcsRingTk * kelilingRingTk * waste;
+
+      if (
+        totalMeterTulanganMendatar <= 0 &&
+        totalMeterRingTul <= 0 &&
+        totalMeterRingTul2 <= 0 &&
+        totalMeterTulanganTiang <= 0 &&
+        totalMeterRingTk <= 0
+      ) {
+        return alert('Masukkan ukuran Besi Tulangan, Ring, atau Tiang terlebih dahulu.');
+      }
+
+      const rekapMeterPerDia = {};
+      const tambahMeter = (dia, m) => {
+        if (m > 0) rekapMeterPerDia[dia] = (rekapMeterPerDia[dia] || 0) + m;
+      };
+      tambahMeter(btDia, totalMeterTulanganMendatar);
+      tambahMeter(rgTulDia, totalMeterRingTul);
+      tambahMeter(rgTul2Dia, totalMeterRingTul2);
+      tambahMeter(tkDia, totalMeterTulanganTiang);
+      tambahMeter(rgTkDia, totalMeterRingTk);
+
+      const corTulPcm = rgTulPcm > 0 ? rgTulPcm + 5 : 0;
+      const corTulLcm = rgTulLcm > 0 ? rgTulLcm + 5 : 0;
+      const volCorTul = ((corTulPcm / 100) * (corTulLcm / 100)) * totalPanjangJalur;
+
+      const corTkPcm = rgTkPcm > 0 ? rgTkPcm + 5 : 0;
+      const corTkLcm = rgTkLcm > 0 ? rgTkLcm + 5 : 0;
+      const volCorTk = ((corTkPcm / 100) * (corTkLcm / 100)) * totalPanjangTiang;
+
+      const totalVolBeton = volCorTul + volCorTk;
+
+      const { kg: sakKg, faktor: faktorSak } = getFaktorSakSemen('b-semen-kg');
+      const koefSemen = mutu === 'k225' ? 8.2 : mutu === 'k175' ? 7.5 : 6.0;
+      const semen = Math.ceil(totalVolBeton * koefSemen * faktorSak);
+      const pasir = parseFloat((totalVolBeton * 0.52).toFixed(2));
+      const split = parseFloat((totalVolBeton * 0.78).toFixed(2));
+      const kawatBendratKg = Math.ceil((totalPcsRingTul + totalPcsRingTul2 + totalPcsRingTk) * 0.015);
+
+      const rows = [
+        { label: `Tulangan Mendatar (${btDia} mm)`, value: `${totalMeterTulanganMendatar.toFixed(1)} m` },
+        { label: `Ring Tulangan (${rgTulDia} mm)`, value: `${totalPcsRingTul.toLocaleString('id-ID')} pcs (${totalMeterRingTul.toFixed(1)} m)` }
+      ];
+
+      if (totalPcsRingTul2 > 0) {
+        rows.push({
+          label: `Ring Tulangan 2 (${rgTul2Dia} mm)`,
+          value: `${totalPcsRingTul2.toLocaleString('id-ID')} pcs (${totalMeterRingTul2.toFixed(1)} m)`
+        });
+      }
+
+      rows.push(
+        { label: `Tulangan Tiang (${tkDia} mm)`, value: `${totalMeterTulanganTiang.toFixed(1)} m (${tkJml} tiang)` },
+        { label: `Ring Tiang (${rgTkDia} mm)`, value: `${totalPcsRingTk.toLocaleString('id-ID')} pcs (${totalMeterRingTk.toFixed(1)} m)` },
+        { divider: true }
+      );
+
+      let totalBiaya = 0;
+
+      Object.keys(rekapMeterPerDia)
+        .sort((a, b) => Number(a) - Number(b))
+        .forEach(dia => {
+          const meter = rekapMeterPerDia[dia];
+          const btg = Math.ceil(meter / PANJANG_BESI_BATANG);
+          const hrgPerBtg = Math.max(0, val(`hrg-besi-${dia}`));
+          const biayaBesi = btg * hrgPerBtg;
+          totalBiaya += biayaBesi;
+
+          rows.push({
+            label: `Besi ${dia} mm (12 m/batang)`,
+            value: `${btg} batang` + `<span class="sub-price">${rp(biayaBesi)}</span>`
+          });
+        });
+
+      const biayaBendrat = kawatBendratKg * Math.max(0, val('hrg-bendrat'));
+      totalBiaya += biayaBendrat;
+
+      rows.push({
+        label: 'Kawat Bendrat',
+        value: `± ${kawatBendratKg} kg` + `<span class="sub-price">${rp(biayaBendrat)}</span>`
+      });
+
+      if (totalVolBeton > 0) {
+        const biayaSemen = semen * Math.max(0, val('hrg-b-semen'));
+        const biayaPasir = pasir * Math.max(0, val('hrg-b-pasir'));
+        const biayaSplit = split * Math.max(0, val('hrg-b-split'));
+        totalBiaya += biayaSemen + biayaPasir + biayaSplit;
+
+        const infoCor = [];
+        if (volCorTul > 0) infoCor.push(`Tul: ${corTulPcm}×${corTulLcm} cm`);
+        if (volCorTk > 0) infoCor.push(`Tiang: ${corTkPcm}×${corTkLcm} cm`);
+
+        rows.push(
+          { divider: true },
+          { label: 'Ukuran Cor (+5 cm selimut)', value: infoCor.join(' | ') || '-' },
+          { label: 'Total Volume Cor Beton', value: `${totalVolBeton.toFixed(3)} m³` },
+          {
+            label: `Semen PC (${sakKg} kg)`,
+            value: `${semen} sak` + `<span class="sub-price">${rp(biayaSemen)}</span>`
+          },
+          {
+            label: 'Pasir Beton',
+            value: `${pasir.toFixed(2)} m³` + `<span class="sub-price">${rp(biayaPasir)}</span>`
+          },
+          {
+            label: 'Batu Split / Kerikil',
+            value: `${split.toFixed(2)} m³` + `<span class="sub-price">${rp(biayaSplit)}</span>`
+          }
+        );
+      }
+
+      renderResult(
+        'beton',
+        'res-beton',
+        'ESTIMASI BESI (12 m/BTG), COR & BIAYA',
+        rows,
+        totalBiaya,
+        '*1 batang besi = 12 m. Kebutuhan meter digabungkan otomatis per diameter besi sebelum dibulatkan ke batang.'
+      );
+    }
+
+    function hitungAtap() {
+      const model = document.getElementById('a-model').value;
+      const pAtap = Math.max(0, val('a-p'));
+      const lAtap = Math.max(0, val('a-l'));
+      if (pAtap <= 0 || lAtap <= 0) {
+        return alert('Masukkan Panjang Atap dan Lebar Bentang terlebih dahulu.');
+      }
+
+      const sudutDeg = Math.min(75, Math.max(0, val('a-sudut') || 30));
+      const cosSudut = Math.cos((sudutDeg * Math.PI) / 180) || 1;
+      const luasDatar = pAtap * lAtap;
+      const luasMiring = luasDatar / cosSudut;
+
+      const pSayap2 = Math.max(0, val('a2-p'));
+      const lSayap2 = Math.max(0, val('a2-l'));
+      const luasMiringSayap2 = (pSayap2 > 0 && lSayap2 > 0) ? ((pSayap2 * lSayap2) / cosSudut) : 0;
+      const luasMiringTotal = luasMiring + luasMiringSayap2;
+
+      const baseWaste = parseFloat(document.getElementById('a-waste').value) || 1.10;
+      const ekstraWastePersen = Math.max(0, val('a-extra-waste'));
+      const totalFaktorWaste = baseWaste + (ekstraWastePersen / 100);
+      const luasEfektifMaterial = luasMiringTotal * totalFaktorWaste;
+
+      let panjangWuwungTotal = 0;
+      if (model === 'jurean') {
+        const pJurai = Math.max(0, val('a-jurai-p'));
+        const pWuwungUtama = Math.max(0, val('a-wuwung-p'));
+        panjangWuwungTotal = pJurai + pWuwungUtama;
+      } else {
+        const pWuwungBedeng = val('a-wuwung-bedeng-p');
+        panjangWuwungTotal = pWuwungBedeng > 0 ? pWuwungBedeng : pAtap;
+      }
+      panjangWuwungTotal += Math.max(0, val('a2-wuwung-p'));
+
+      const wuwungEfektif = Math.max(0.1, val('a-wuwung-efektif') || 0.33);
+      const jmlWuwung = Math.ceil((panjangWuwungTotal * totalFaktorWaste) / wuwungEfektif);
+
+      const luasUnitAtap = parseFloat(document.getElementById('a-jenis-atap').value) || 0.616;
+      const jmlUnitAtap = Math.ceil(luasEfektifMaterial / luasUnitAtap);
+
+      const rangka = document.getElementById('a-rangka').value;
+      const labelModel = model === 'jurean' ? 'Jurean' : 'Bedengan';
+      const infoWastePersen = ((totalFaktorWaste - 1) * 100).toFixed(1).replace(/\.0$/, '');
+
+      const rows = [
+        { label: 'Model Atap', value: `${labelModel} (waste total ${infoWastePersen}%)` },
+        { label: 'Luas Bidang Atap Miring', value: `${luasMiringTotal.toFixed(2)} m² (${sudutDeg}°)` },
+        { label: 'Panjang Wuwung / Jurai', value: `${panjangWuwungTotal.toFixed(2)} m` }
+      ];
+
+      let totalBiaya = 0;
+
+      if (rangka === 'kayu') {
+        const jarakUsukM = Math.max(0.2, (val('kayu-jarak-usuk') || 50) / 100);
+        const jarakRengM = Math.max(0.15, (val('kayu-jarak-reng') || 30) / 100);
+        const pjgKayuBtg = Math.max(2, val('kayu-pjg-btg') || 4);
+
+        const sisiMiring = lAtap / cosSudut;
+        const jmlBarisUsuk = (Math.floor(pAtap / jarakUsukM) + 1) * 2;
+        const totalMeterBalokUsuk = jmlBarisUsuk * sisiMiring * totalFaktorWaste;
+        const btgBalokUsuk = Math.ceil(totalMeterBalokUsuk / pjgKayuBtg);
+
+        const jmlBarisReng = (Math.floor(sisiMiring / jarakRengM) + 1) * 2;
+        const totalMeterReng = jmlBarisReng * pAtap * totalFaktorWaste;
+        const btgRengKayu = Math.ceil(totalMeterReng / pjgKayuBtg);
+
+        const pakuKg = Math.max(1, Math.ceil((btgBalokUsuk + btgRengKayu) * 0.12));
+
+        const biayaBalok = btgBalokUsuk * Math.max(0, val('hrg-kayu-balok'));
+        const biayaReng = btgRengKayu * Math.max(0, val('hrg-kayu-reng'));
+        const biayaPaku = pakuKg * Math.max(0, val('hrg-paku'));
+        totalBiaya += biayaBalok + biayaReng + biayaPaku;
+
+        rows.push(
+          { divider: true },
+          {
+            label: `Kayu Balok/Usuk (${pjgKayuBtg} m/btg)`,
+            value: `${btgBalokUsuk} batang` + `<span class="sub-price">${rp(biayaBalok)}</span>`
+          },
+          {
+            label: `Reng Kayu (${pjgKayuBtg} m/btg)`,
+            value: `${btgRengKayu} batang` + `<span class="sub-price">${rp(biayaReng)}</span>`
+          },
+          {
+            label: 'Paku Rangka & Reng',
+            value: `${pakuKg} kg` + `<span class="sub-price">${rp(biayaPaku)}</span>`
+          }
+        );
+      } else {
+        const jarakKasoM = Math.max(0.25, (val('br-jarak-kaso') || 60) / 100);
+        const jarakRengBrM = Math.max(0.15, (val('br-jarak-reng') || 30) / 100);
+        const pjgBrBtg = Math.max(3, val('br-pjg-btg') || 6);
+
+        const sisiMiring = lAtap / cosSudut;
+        const jmlBarisKaso = (Math.floor(pAtap / jarakKasoM) + 1) * 2;
+        const totalMeterC75 = jmlBarisKaso * sisiMiring * totalFaktorWaste;
+        const btgC75 = Math.ceil(totalMeterC75 / pjgBrBtg);
+
+        const jmlBarisRengBr = (Math.floor(sisiMiring / jarakRengBrM) + 1) * 2;
+        const totalMeterRengBr = jmlBarisRengBr * pAtap * totalFaktorWaste;
+        const btgRengBr = Math.ceil(totalMeterRengBr / pjgBrBtg);
+
+        const pakAksesoris = Math.max(1, Math.ceil((btgC75 + btgRengBr) / 25));
+
+        const biayaC75 = btgC75 * Math.max(0, val('hrg-br-c75'));
+        const biayaRengBr = btgRengBr * Math.max(0, val('hrg-br-reng'));
+        const biayaAks = pakAksesoris * Math.max(0, val('hrg-br-aks'));
+        totalBiaya += biayaC75 + biayaRengBr + biayaAks;
+
+        rows.push(
+          { divider: true },
+          {
+            label: `Profil C75 Baja Ringan (${pjgBrBtg} m/btg)`,
+            value: `${btgC75} batang` + `<span class="sub-price">${rp(biayaC75)}</span>`
+          },
+          {
+            label: `Reng Baja Ringan (${pjgBrBtg} m/btg)`,
+            value: `${btgRengBr} batang` + `<span class="sub-price">${rp(biayaRengBr)}</span>`
+          },
+          {
+            label: 'Sekrup & Dynabolt (kebutuhan lain)',
+            value: `${pakAksesoris} pak` + `<span class="sub-price">${rp(biayaAks)}</span>`
+          }
+        );
+      }
+
+      const biayaAtap = jmlUnitAtap * Math.max(0, val('hrg-atap-unit'));
+      const biayaWuwung = jmlWuwung * Math.max(0, val('hrg-wuwung-unit'));
+      totalBiaya += biayaAtap + biayaWuwung;
+
+      rows.push(
+        { divider: true },
+        {
+          label: 'Penutup Atap (termasuk waste)',
+          value: `${jmlUnitAtap.toLocaleString('id-ID')} lbr/bh` + `<span class="sub-price">${rp(biayaAtap)}</span>`
+        },
+        {
+          label: 'Wuwung / Nok (termasuk waste)',
+          value: `${jmlWuwung.toLocaleString('id-ID')} buah` + `<span class="sub-price">${rp(biayaWuwung)}</span>`
+        }
+      );
+
+      renderResult(
+        'atap',
+        'res-atap',
+        'ESTIMASI STRUKTUR ATAP, WUWUNG & BIAYA',
+        rows,
+        totalBiaya,
+        '*Ekstra waste bersifat opsional (0% jika dikosongkan) dan digabung ke cadangan potongan utama.'
+      );
+    }
+
+    function hitungDak() {
+      const p1 = Math.max(0, val('dk-p'));
+      const l1 = Math.max(0, val('dk-l'));
+      const t1M = Math.max(0, val('dk-t')) / 100;
+
+      const p2 = Math.max(0, val('dk2-p'));
+      const l2 = Math.max(0, val('dk2-l'));
+      const t2M = Math.max(0, val('dk2-t')) / 100;
+
+      const luas1 = p1 * l1;
+      const luas2 = p2 * l2;
+      const totalLuas = luas1 + luas2;
+      const volBeton = (luas1 * t1M) + (luas2 * t2M);
+
+      if (totalLuas <= 0 || volBeton <= 0) {
+        return alert('Masukkan Panjang, Lebar, dan Tebal Dak terlebih dahulu.');
+      }
+
+      const alas = document.getElementById('dk-alas').value;
+      const spasiCm = Math.max(5, val('dk-spasi') || 15);
+      const spasiM = spasiCm / 100;
+      const lapis = parseInt(document.getElementById('dk-lapis').value, 10) || 1;
+      const waste = parseFloat(document.getElementById('dk-waste').value) || 1.10;
+      const mutu = document.getElementById('dk-mutu').value;
+
+      const hitungPanjangBidang = (p, l) => {
+        if (p <= 0 || l <= 0) return 0;
+        const jmlArahP = Math.floor(l / spasiM) + 1;
+        const jmlArahL = Math.floor(p / spasiM) + 1;
+        return ((jmlArahP * p) + (jmlArahL * l)) * lapis;
+      };
+
+      const totalMeterMurni = hitungPanjangBidang(p1, l1) + hitungPanjangBidang(p2, l2);
+      const totalMeterBesi = totalMeterMurni * waste;
+      const btgBesi = Math.ceil(totalMeterBesi / PANJANG_BESI_BATANG);
+
+      const { kg: sakKg, faktor: faktorSak } = getFaktorSakSemen('dk-semen-kg');
+      const koefSemen = mutu === 'k225' ? 8.2 : mutu === 'k175' ? 7.5 : 6.0;
+      const semen = Math.ceil(volBeton * koefSemen * faktorSak);
+      const pasir = parseFloat((volBeton * 0.52).toFixed(2));
+      const split = parseFloat((volBeton * 0.78).toFixed(2));
+
+      const biayaBesi = btgBesi * Math.max(0, val('hrg-dk-besi'));
+      const biayaSemen = semen * Math.max(0, val('hrg-dk-semen'));
+      const biayaPasir = pasir * Math.max(0, val('hrg-dk-pasir'));
+      const biayaSplit = split * Math.max(0, val('hrg-dk-split'));
+
+      let totalBiaya = biayaBesi + biayaSemen + biayaPasir + biayaSplit;
+      const rows = [
+        { label: 'Total Luas Bidang Dak', value: `${totalLuas.toFixed(2)} m²` },
+        { label: 'Total Volume Cor Beton', value: `${volBeton.toFixed(3)} m³` }
+      ];
+
+      if (alas === 'bondek') {
+        const pjgBondek = Math.max(1, val('dk-bondek-pjg') || 6);
+        const lbrBondek = Math.max(0.2, val('dk-bondek-lbr') || 1.0);
+        const luasPerBondek = pjgBondek * lbrBondek;
+        const jmlBondek = Math.ceil((totalLuas * waste) / luasPerBondek);
+        const biayaAlas = jmlBondek * Math.max(0, val('hrg-dk-alas'));
+        totalBiaya += biayaAlas;
+        rows.push({
+          label: `Bondek (${pjgBondek} m × ${lbrBondek} m, incl. waste)`,
+          value: `${jmlBondek} lembar` + `<span class="sub-price">${rp(biayaAlas)}</span>`
+        });
+      } else if (alas === 'papan') {
+        const pjgPapan = Math.max(1, val('dk-papan-pjg') || 4);
+        const lbrPapanM = Math.max(0.05, (val('dk-papan-lbr') || 20) / 100);
+        const luasPerPapan = pjgPapan * lbrPapanM;
+        const jmlPapan = Math.ceil((totalLuas * waste) / luasPerPapan);
+        const biayaAlas = jmlPapan * Math.max(0, val('hrg-dk-alas'));
+        totalBiaya += biayaAlas;
+        rows.push({
+          label: `Papan Alas Cor (${pjgPapan} m × ${(lbrPapanM * 100).toFixed(0)} cm, incl. waste)`,
+          value: `${jmlPapan} lembar/btg` + `<span class="sub-price">${rp(biayaAlas)}</span>`
+        });
+      } else if (alas === 'multiplex') {
+        const tebalMpx = document.getElementById('dk-multiplex-tebal').value;
+        const luasPerMpx = 1.22 * 2.44;
+        const jmlMpx = Math.ceil((totalLuas * waste) / luasPerMpx);
+        const biayaAlas = jmlMpx * Math.max(0, val('hrg-dk-alas'));
+        totalBiaya += biayaAlas;
+        rows.push({
+          label: `Multiplex ${tebalMpx} mm (1,22×2,44 m, incl. waste)`,
+          value: `${jmlMpx} lembar` + `<span class="sub-price">${rp(biayaAlas)}</span>`
+        });
+      }
+
+      rows.push(
+        { divider: true },
+        {
+          label: `Besi / Wermes (${document.getElementById('dk-dia').value} mm, jarak ${spasiCm} cm, 12 m/btg)`,
+          value: `${btgBesi} batang (${totalMeterBesi.toFixed(1)} m)` + `<span class="sub-price">${rp(biayaBesi)}</span>`
+        },
+        {
+          label: `Semen PC (${sakKg} kg)`,
+          value: `${semen} sak` + `<span class="sub-price">${rp(biayaSemen)}</span>`
+        },
+        {
+          label: 'Pasir Beton',
+          value: `${pasir.toFixed(2)} m³` + `<span class="sub-price">${rp(biayaPasir)}</span>`
+        },
+        {
+          label: 'Batu Split / Kerikil',
+          value: `${split.toFixed(2)} m³` + `<span class="sub-price">${rp(biayaSplit)}</span>`
+        }
+      );
+
+      renderResult(
+        'dak',
+        'res-dak',
+        'ESTIMASI ALAS COR, BESI, COR & BIAYA DAK',
+        rows,
+        totalBiaya,
+        '*Patokan besi 12 m/batang. Volume cor dihitung dari P × L × T.'
+      );
+    }
+
+    function hitungPondasi() {
+      const p1 = Math.max(0, val('pd-p'));
+      const t1 = Math.max(0, val('pd-t'));
+      const la = Math.max(0, val('pd-la'));
+      const lb = Math.max(0, val('pd-lb'));
+
+      if (p1 <= 0 || t1 <= 0 || (la <= 0 && lb <= 0)) {
+        return alert('Masukkan Panjang Jalur, Tinggi Pondasi, dan Lebar Atas/Bawah terlebih dahulu.');
+      }
+
+      const lebarAtas = la > 0 ? la : lb;
+      const lebarBawah = lb > 0 ? lb : la;
+      const luasPenampang1 = ((lebarAtas + lebarBawah) / 2) * t1;
+      const vol1 = luasPenampang1 * p1;
+
+      const p2 = Math.max(0, val('pd2-p'));
+      const t2 = val('pd2-t') > 0 ? Math.max(0, val('pd2-t')) : t1;
+      const vol2 = (p2 > 0 && t2 > 0) ? (luasPenampang1 * (t2 / t1) * p2) : 0;
+
+      const totalVol = vol1 + vol2;
+      const totalPanjang = p1 + p2;
+
+      const waste = parseFloat(document.getElementById('pd-waste').value) || 1.15;
+      const adukan = document.getElementById('pd-adukan').value;
+
+      const { kg: sakKg, faktor: faktorSak } = getFaktorSakSemen('pd-semen-kg');
+      const batuM3 = parseFloat((totalVol * waste).toFixed(2));
+      const koefSemen = adukan === '1:5' ? 3.5 : 4.2;
+      const semenSak = Math.ceil(totalVol * koefSemen * faktorSak);
+      const pasirM3 = parseFloat((totalVol * 0.50).toFixed(2));
+
+      const biayaBatu = batuM3 * Math.max(0, val('hrg-pd-batu'));
+      const biayaSemen = semenSak * Math.max(0, val('hrg-pd-semen'));
+      const biayaPasir = pasirM3 * Math.max(0, val('hrg-pd-pasir'));
+      const totalBiaya = biayaBatu + biayaSemen + biayaPasir;
+
+      renderResult(
+        'pondasi',
+        'res-pondasi',
+        'ESTIMASI BATU PONDASI & BIAYA',
+        [
+          { label: 'Total Panjang Jalur Pondasi', value: `${totalPanjang.toFixed(2)} m` },
+          { label: 'Volume Pondasi Murni', value: `${totalVol.toFixed(2)} m³` },
+          { divider: true },
+          {
+            label: 'Batu Pondasi / Batu Kali (termasuk waste)',
+            value: `${batuM3.toFixed(2)} m³` + `<span class="sub-price">${rp(biayaBatu)}</span>`
+          },
+          {
+            label: `Semen PC ${sakKg} kg (${adukan})`,
+            value: `${semenSak} sak` + `<span class="sub-price">${rp(biayaSemen)}</span>`
+          },
+          {
+            label: 'Pasir Pasang',
+            value: `${pasirM3.toFixed(2)} m³` + `<span class="sub-price">${rp(biayaPasir)}</span>`
+          }
+        ],
+        totalBiaya,
+        '*Kebutuhan batu dibulatkan 2 desimal termasuk cadangan potongan/rongga sesuai pilihan.'
+      );
+    }
+
+    function hitungTeralis() {
+      const tipeList = [
+        { jml: Math.max(0, Math.round(val('tr1-jml'))), lCm: Math.max(0, val('tr1-l')), tCm: Math.max(0, val('tr1-t')) },
+        { jml: Math.max(0, Math.round(val('tr2-jml'))), lCm: Math.max(0, val('tr2-l')), tCm: Math.max(0, val('tr2-t')) },
+        { jml: Math.max(0, Math.round(val('tr3-jml'))), lCm: Math.max(0, val('tr3-l')), tCm: Math.max(0, val('tr3-t')) }
+      ];
+
+      const spasiCm = Math.max(4, val('tr-spasi') || 10);
+      const model = document.getElementById('tr-model').value;
+      const pjgBtgM = Math.max(3, val('tr-pjg-btg') || 6);
+      const waste = 1.10;
+
+      let totalUnit = 0;
+      let totalMeterBingkai = 0;
+      let totalMeterJeruji = 0;
+      let totalBatangJerujiPcs = 0;
+
+      tipeList.forEach(item => {
+        if (item.jml > 0 && item.lCm > 0 && item.tCm > 0) {
+          totalUnit += item.jml;
+          const lM = item.lCm / 100;
+          const tM = item.tCm / 100;
+
+          const kelilingM = 2 * (lM + tM);
+          totalMeterBingkai += kelilingM * item.jml;
+
+          let pcsVertikal = Math.max(0, Math.floor(item.lCm / spasiCm) - 1);
+          let pcsHorizontal = Math.max(0, Math.floor(item.tCm / spasiCm) - 1);
+
+          let meterJerujiUnit = 0;
+          let pcsUnit = 0;
+
+          if (model === 'vertikal') {
+            meterJerujiUnit = pcsVertikal * tM;
+            pcsUnit = pcsVertikal;
+          } else if (model === 'horizontal') {
+            meterJerujiUnit = pcsHorizontal * lM;
+            pcsUnit = pcsHorizontal;
+          } else {
+            meterJerujiUnit = (pcsVertikal * tM) + (pcsHorizontal * lM);
+            pcsUnit = pcsVertikal + pcsHorizontal;
+          }
+
+          totalMeterJeruji += meterJerujiUnit * item.jml;
+          totalBatangJerujiPcs += pcsUnit * item.jml;
+        }
+      });
+
+      if (totalUnit <= 0) {
+        return alert('Masukkan minimal satu tipe ukuran teralis (Jumlah, Lebar, dan Tinggi dalam cm).');
+      }
+
+      const meterBingkaiWaste = totalMeterBingkai * waste;
+      const meterJerujiWaste = totalMeterJeruji * waste;
+
+      const btgBingkai = Math.ceil(meterBingkaiWaste / pjgBtgM);
+      const btgJeruji = Math.ceil(meterJerujiWaste / pjgBtgM);
+      const paketLasCat = Math.max(1, Math.ceil(totalUnit / 4));
+
+      const biayaBingkai = btgBingkai * Math.max(0, val('hrg-tr-frame'));
+      const biayaJeruji = btgJeruji * Math.max(0, val('hrg-tr-jeruji'));
+      const biayaAks = paketLasCat * Math.max(0, val('hrg-tr-aks'));
+      const totalBiaya = biayaBingkai + biayaJeruji + biayaAks;
+
+      renderResult(
+        'teralis',
+        'res-teralis',
+        'ESTIMASI MATERIAL & BIAYA TERALIS',
+        [
+          { label: 'Total Jendela / Unit Teralis', value: `${totalUnit} unit` },
+          { label: 'Total Potongan Jeruji Dalam', value: `${totalBatangJerujiPcs} potong (spasi ${spasiCm} cm)` },
+          { divider: true },
+          {
+            label: `Besi Bingkai/Frame (${pjgBtgM} m/btg)`,
+            value: `${btgBingkai} batang (${meterBingkaiWaste.toFixed(1)} m)` + `<span class="sub-price">${rp(biayaBingkai)}</span>`
+          },
+          {
+            label: `Besi Jeruji/Nako (${pjgBtgM} m/btg)`,
+            value: `${btgJeruji} batang (${meterJerujiWaste.toFixed(1)} m)` + `<span class="sub-price">${rp(biayaJeruji)}</span>`
+          },
+          {
+            label: 'Kawat Las, Dempul & Cat Anti Karat',
+            value: `${paketLasCat} paket` + `<span class="sub-price">${rp(biayaAks)}</span>`
+          }
+        ],
+        totalBiaya,
+        '*Sudah termasuk cadangan potongan (+10% waste) sesuai standar.'
+      );
+    }
+
+    function hitungLantai() {
+      const luas1 = Math.max(0, val('l-p')) * Math.max(0, val('l-l'));
+      const luas2 = Math.max(0, val('l2-p')) * Math.max(0, val('l2-l'));
+      const luas3 = Math.max(0, val('l3-p')) * Math.max(0, val('l3-l'));
+      const luas = luas1 + luas2 + luas3;
+
+      const perDus = parseFloat(document.getElementById('l-dus').value);
+      const waste = parseFloat(document.getElementById('l-waste').value);
+
+      if (luas <= 0) return alert('Masukkan panjang dan lebar ruangan terlebih dahulu.');
+
+      const { kg: sakKg, faktor: faktorSak } = getFaktorSakSemen('l-semen-kg');
+      const dus = Math.ceil((luas * waste) / perDus);
+      const semenPasang = Math.ceil(luas * 0.25 * faktorSak);
+      const pasir = parseFloat((luas * 0.045).toFixed(2));
+
+      const biayaDus = dus * Math.max(0, val('hrg-l-dus'));
+      const biayaSemen = semenPasang * Math.max(0, val('hrg-l-semen'));
+      const biayaPasir = pasir * Math.max(0, val('hrg-l-pasir'));
+      const totalBiaya = biayaDus + biayaSemen + biayaPasir;
+
+      renderResult(
+        'lantai',
+        'res-lantai',
+        'ESTIMASI KERAMIK / GRANIT & BIAYA',
+        [
+          { label: 'Total Luas Lantai', value: `${luas.toFixed(2)} m²` },
+          {
+            label: 'Kebutuhan Keramik/Granit',
+            value: `${dus} dus` + `<span class="sub-price">${rp(biayaDus)}</span>`
+          },
+          {
+            label: `Semen Adukan (${sakKg} kg)`,
+            value: `${semenPasang} sak` + `<span class="sub-price">${rp(biayaSemen)}</span>`
+          },
+          {
+            label: 'Pasir Pasang',
+            value: `${pasir.toFixed(2)} m³` + `<span class="sub-price">${rp(biayaPasir)}</span>`
+          }
+        ],
+        totalBiaya,
+        '*Sudah termasuk cadangan potongan (waste) sesuai pilihan.'
+      );
+    }
+
+    function hitungCat() {
+      const luas = Math.max(0, val('c-luas'));
+      const lapis = parseInt(document.getElementById('c-lapis').value, 10);
+      const sebar = Math.max(0.5, val('c-sebar') || 10);
+
+      if (luas <= 0) return alert('Masukkan luas bidang yang akan dicat.');
+
+      const kebutuhan = (luas * lapis) / sebar;
+      const galon = Math.ceil(kebutuhan / 2.5);
+      const totalBiaya = galon * Math.max(0, val('hrg-c-galon'));
+
+      renderResult(
+        'cat',
+        'res-cat',
+        'ESTIMASI KEBUTUHAN & BIAYA CAT',
+        [
+          { label: 'Total Luas Sapuan', value: `${(luas * lapis).toFixed(1)} m² (${lapis} lapis)` },
+          { label: 'Kebutuhan Cat', value: `${kebutuhan.toFixed(1)} liter` },
+          {
+            label: 'Estimasi Kaleng (~2.5 L)',
+            value: `${galon} kaleng` + `<span class="sub-price">${rp(totalBiaya)}</span>`
+          }
+        ],
+        totalBiaya,
+        '*Cek kembali daya sebar spesifik pada kemasan merek cat yang digunakan.'
+      );
+    }
+
+    function hitungPlafon() {
+      const p1 = Math.max(0, val('pl-p'));
+      const l1 = Math.max(0, val('pl-l'));
+      const p2 = Math.max(0, val('pl2-p'));
+      const l2 = Math.max(0, val('pl2-l'));
+      const p3 = Math.max(0, val('pl3-p'));
+      const l3 = Math.max(0, val('pl3-l'));
+
+      const luas1 = p1 * l1;
+      const luas2 = p2 * l2;
+      const luas3 = p3 * l3;
+      const luasBersih = luas1 + luas2 + luas3;
+
+      if (luasBersih <= 0) {
+        return alert('Masukkan panjang dan lebar ruangan plafon terlebih dahulu.');
+      }
+
+      const keliling =
+        (p1 > 0 && l1 > 0 ? 2 * (p1 + l1) : 0) +
+        (p2 > 0 && l2 > 0 ? 2 * (p2 + l2) : 0) +
+        (p3 > 0 && l3 > 0 ? 2 * (p3 + l3) : 0);
+
+      const jenis = document.getElementById('pl-jenis').value;
+      const rangka = document.getElementById('pl-rangka').value;
+      const waste = parseFloat(document.getElementById('pl-waste').value) || 1.10;
+      const pjgList = parseFloat(document.getElementById('pl-list-pjg').value) || 4;
+
+      const luasTotal = luasBersih * waste;
+
+      let jmlPenutup = 0;
+      let namaPenutup = '';
+      let satuanPenutup = 'lembar';
+
+      if (jenis === 'gypsum' || jenis === 'grc') {
+        const luasLembar = 1.2 * 2.4;
+        jmlPenutup = Math.ceil(luasTotal / luasLembar);
+        namaPenutup = jenis === 'gypsum' ? 'Papan Gypsum (1,2×2,4m)' : 'GRC Board (1,2×2,4m)';
+      } else {
+        const pjgPvc = jenis === 'pvc_3' ? 3 : (jenis === 'pvc_4' ? 4 : 6);
+        const luasBatangPvc = 0.20 * pjgPvc;
+        jmlPenutup = Math.ceil(luasTotal / luasBatangPvc);
+        namaPenutup = `Plafon PVC (20cm × ${pjgPvc}m)`;
+        satuanPenutup = 'batang';
+      }
+
+      const jmlRangka = Math.ceil(luasTotal * 1.1);
+      const namaRangka = rangka === 'hollow' ? 'Hollow Galvalum (4m)' : 'Kaso Kayu (4m)';
+      const jmlList = Math.ceil((keliling * waste) / pjgList);
+      const jmlSekrup = Math.ceil(luasBersih * 25);
+
+      const isPapan = (jenis === 'gypsum' || jenis === 'grc');
+      const jmlCompound = isPapan ? Math.ceil(luasBersih / 15) : 0;
+
+      const biayaPenutup = jmlPenutup * Math.max(0, val('hrg-pl-penutup'));
+      const biayaRangka = jmlRangka * Math.max(0, val('hrg-pl-rangka'));
+      const biayaList = jmlList * Math.max(0, val('hrg-pl-list'));
+      const biayaJasa = luasBersih * Math.max(0, val('hrg-pl-jasa'));
+      const totalBiaya = biayaPenutup + biayaRangka + biayaList + biayaJasa;
+
+      const rows = [
+        { label: 'Luas Plafon Bersih', value: `${luasBersih.toFixed(2)} m²` },
+        { label: 'Luas Plafon (+Waste)', value: `${luasTotal.toFixed(2)} m²` },
+        { label: 'Keliling Ruangan', value: `${keliling.toFixed(2)} m'` },
+        { divider: true },
+        {
+          label: namaPenutup,
+          value: `${jmlPenutup} ${satuanPenutup}` + `<span class="sub-price">${rp(biayaPenutup)}</span>`
+        },
+        {
+          label: namaRangka,
+          value: `${jmlRangka} batang` + `<span class="sub-price">${rp(biayaRangka)}</span>`
+        },
+        {
+          label: `List Pinggir (${pjgList}m/btg)`,
+          value: `${jmlList} batang` + `<span class="sub-price">${rp(biayaList)}</span>`
+        },
+        {
+          label: 'Sekrup Plafon (estimasi)',
+          value: `± ${jmlSekrup} pcs`
+        }
+      ];
+
+      if (jmlCompound > 0) {
+        rows.push({
+          label: 'Compound & Joint Tape (estimasi)',
+          value: `± ${jmlCompound} zak`
+        });
+      }
+
+      rows.push({
+        label: `Upah Pasang (${luasBersih.toFixed(2)} m²)`,
+        value: rp(biayaJasa)
+      });
+
+      renderResult(
+        'plafon',
+        'res-plafon',
+        'ESTIMASI MATERIAL & BIAYA PLAFON',
+        rows,
+        totalBiaya,
+        '*Sekrup & compound ditampilkan sebagai panduan kebutuhan pendukung; total biaya dihitung dari item harga yang diisi.'
+      );
+    }
+  </script>
+</body>
+</html>
